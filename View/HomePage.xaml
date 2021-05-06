@@ -1,0 +1,20 @@
+﻿<ui:Page x:Class="StudentManager.View.HomePage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StudentManager.View"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        mc:Ignorable="d"
+        Title="HomePage">
+    <ScrollViewer>
+        <ui:SimpleStackPanel
+            Spacing="24"
+            Margin="24 10 24 20">
+
+            <Button x:Name="Button"
+                    Content="Enabled button" />
+
+        </ui:SimpleStackPanel>
+    </ScrollViewer>
+</ui:Page>

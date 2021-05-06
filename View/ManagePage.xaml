@@ -1,0 +1,111 @@
+﻿<ui:Page x:Class="StudentManager.View.ManagePage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StudentManager.View"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:app="WpfTest2_MVVM.App"
+        mc:Ignorable="d"
+        Title="ManagePage">
+
+    <Page.Resources>
+        <!--标准文本字体-->
+        <Style x:Key="TextBlockStd" TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Margin" Value="0 0 0 5"/>
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+
+    <!--主体-->
+    <Grid>
+        <!--主体列定义-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+
+        <!--左侧显示区-->
+        <Grid Grid.Column="0">
+            <!--左侧行定义-->
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="80"/>
+            </Grid.RowDefinitions>
+            <!--表格-->
+            <DataGrid x:Name="TableDataGrid"
+                      Margin="10,10"
+                      Grid.Row="0"
+                      CanUserResizeRows="True"
+                      AutoGenerateColumns="False"
+                      CanUserSortColumns="True"
+                      CanUserAddRows="False"
+                      IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Id}" Width="120" Header="学号"/>
+                    <DataGridTextColumn Binding="{Binding Name}" Width="100" Header="姓名"/>
+                    <DataGridTextColumn Binding="{Binding Sex}" Width="100" Header="性别"/>
+                    <DataGridTextColumn Binding="{Binding Age}" Width="100" Header="年龄"/>
+                    <DataGridTextColumn Binding="{Binding Score}" Width="100" Header="分数"/>
+                    <DataGridTextColumn Binding="{Binding GPA}" Width="100" Header="学分"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!--底部工具栏-->
+            <Border Margin="10 10 10 10"
+                    Grid.Row="1"
+                    Background="#EEE">
+
+                <!--每页行数--><!--
+                <StackPanel Margin="10 10 10 0" Orientation="Horizontal">
+                    <TextBlock Text="每页显示行数" 
+                               VerticalAlignment="Center"
+                               Margin="4,4"
+                               Style="{StaticResource TextBlockStd}"/>
+                    <TextBox x:Name="tboxLinesInPage"
+                             Width="15"
+                             Height="10"
+                             VerticalAlignment="Center"
+                             Text="{Binding LinesInPage}"/>
+                </StackPanel>-->
+
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="btnInsert" Content="插入" Margin="10,10" Click="btnInsert_Click" Width="80"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!--管理工具 右侧操作区-->
+        <ScrollViewer Grid.Column="1" Margin="10,10">
+            <!--表选择器-->
+            <ui:SimpleStackPanel Background="#EEE">
+                <!--学期-->
+                <TextBlock Text="学期" Style="{StaticResource TextBlockStd}" Margin="10 10 10 5" />
+                <Border Margin="10 0 10 10" Background="#DDD">
+                    <ListBox x:Name="TermsListBox"
+                             ItemsSource="{Binding TermsList}" 
+                             Margin="4,4"
+                             Height="150"
+                             SelectionChanged="TermsListBox_SelectionChanged">
+                    </ListBox>
+                </Border>
+
+                <!--班级-->
+                <TextBlock Text="班级" Style="{StaticResource TextBlockStd}" Margin="10 10 10 5" />
+                <Border Margin="10 0 10 0" Background="#DDD">
+                    <ListBox x:Name="ClassesListBox"
+                             ItemsSource="{Binding ClassesList}" 
+                             Margin="4,4"
+                             Height="150"
+                             IsEnabled="False"
+                             SelectionChanged="ClassesListBox_SelectionChanged">
+                    </ListBox>
+                </Border>
+
+            </ui:SimpleStackPanel>
+        </ScrollViewer>
+    </Grid>
+</ui:Page>
