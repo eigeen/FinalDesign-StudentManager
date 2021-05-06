@@ -1,5 +1,6 @@
 # 期末程序设计 学生成绩管理系统
 
+[![Building](https://github.com/eigeen/FinalDesign-StudentManager/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/eigeen/FinalDesign-StudentManager/actions/workflows/dotnet-desktop.yml)
 
 ## 开发环境
 
