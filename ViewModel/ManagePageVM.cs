@@ -20,6 +20,7 @@ namespace StudentManager.ViewModel
             conn = new SqliteConnection("Data Source = Data.db");
             conn.Open();
             cmd = conn.CreateCommand();
+            InitDB();
         }
 
         /// <summary>
@@ -27,10 +28,11 @@ namespace StudentManager.ViewModel
         /// </summary>
         private void InitDB()
         {
-            cmd.CommandText = "SELECT * FROM sqlite_master WHERE table='Info'";
+            cmd.CommandText = "SELECT * FROM sqlite_master WHERE 'table'='Info'";
             reader = cmd.ExecuteReader();
             if (!reader.Read())
             {
+                reader.Close();
                 cmd.CommandText = @"CREATE TABLE 'Info' (
                                         Term TEXT NOT NULL,
 	                                    Class TEXT NOT NULL,
@@ -38,7 +40,6 @@ namespace StudentManager.ViewModel
                                         Subjects TEXT)";
                 cmd.ExecuteNonQuery();
             }
-            reader.Close();
         }
 
         #region ListBox列表获取
@@ -178,5 +179,24 @@ namespace StudentManager.ViewModel
             reader.Close();
             return tableName;
         }
+
+        public void UpdateDatabase(List<StudentModel> newList, string tableName)
+        {
+            //删除表
+            cmd.CommandText = $"DROP TABLE {tableName}";
+            cmd.ExecuteNonQuery();
+
+            //新建表
+            this.CreateTable(tableName);
+
+            foreach (StudentModel row in newList)
+            {
+                //插入新数据
+                cmd.CommandText = @$"INSERT INTO {tableName} VALUES (
+                    '{row.Id}','{row.Name}','{row.Sex}','{row.Age}','{row.Score}','{row.GPA}');";
+                cmd.ExecuteNonQuery();
+            }
+        }
+
     }
 }

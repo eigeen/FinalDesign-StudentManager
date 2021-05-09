@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfProject"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" MinHeight="400" MinWidth="800"
+        Title="学生成绩管理系统" MinHeight="400" MinWidth="800"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:muxc="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True">

@@ -43,7 +43,10 @@
                       AutoGenerateColumns="False"
                       CanUserSortColumns="True"
                       CanUserAddRows="False"
-                      IsReadOnly="True">
+                      IsReadOnly="True"
+
+                      SelectedIndex="{Binding DGSelectedIdx}"
+                      RowEditEnding="TableDataGrid_RowEditEnding">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Id}" Width="120" Header="学号"/>
                     <DataGridTextColumn Binding="{Binding Name}" Width="100" Header="姓名"/>
@@ -59,7 +62,8 @@
                     Grid.Row="1"
                     Background="#EEE">
 
-                <!--每页行数--><!--
+                <!--每页行数-->
+                <!--
                 <StackPanel Margin="10 10 10 0" Orientation="Horizontal">
                     <TextBlock Text="每页显示行数" 
                                VerticalAlignment="Center"
@@ -73,7 +77,23 @@
                 </StackPanel>-->
 
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="btnInsert" Content="插入" Margin="10,10" Click="btnInsert_Click" Width="80"/>
+                    <ToggleButton x:Name="tbtnInsert" 
+                                  Content="预览模式" 
+                                  Margin="10,10" 
+                                  Width="80" 
+                                  Checked="tbtnInsert_Checked"
+                                  Unchecked="tbtnInsert_Unchecked"/>
+                    <Button x:Name="btnDelRow" Content="删除行" IsEnabled="False" Click="btnDelRow_Click"/>
+                    <TextBlock x:Name="tbBottomInfo"
+                               Text="对表格进行修改后请及时保存更改。"
+                               Width="400"
+                               Margin="30 0 0 0"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Visibility="Hidden"
+                               Style="{StaticResource TextBlockStd}"/>
+                    <Button x:Name="btnSaveChange" Content="保存更改" IsEnabled="False" Click="btnSaveChange_Click"/>
+
                 </StackPanel>
             </Border>
         </Grid>

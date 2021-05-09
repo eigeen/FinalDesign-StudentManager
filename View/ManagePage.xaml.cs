@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -28,11 +30,45 @@ namespace StudentManager.View
         public List<string> ClassesList { get; set; } = new List<string> { };
         public string Term { get; set; } = string.Empty;
         public string Class { get; set; } = string.Empty;
+        public string SelectedTable { get; set; }
         public string LinesInPage { get; set; }
+        public int DGSelectedIdx { get; set; }
 
         private List<string> emptyList = new List<string> { };
 
-        InsertionView insertionView = new InsertionView();
+        private List<StudentModel> dgItemsSource;
+
+        public List<StudentModel> DGItemsSource
+        {
+            get { return dgItemsSource; }
+            set
+            {
+                dgItemsSource = value;
+                TableDataGrid.ItemsSource = dgItemsSource;
+            }
+        }
+
+
+        private bool isEditMode;
+
+        public bool IsEditMode
+        {
+            get { return isEditMode; }
+            set
+            {
+                isEditMode = value;
+                if (isEditMode)
+                {
+                    TableDataGrid.CanUserAddRows = true;
+                    TableDataGrid.IsReadOnly = false;
+                }
+                else
+                {
+                    TableDataGrid.CanUserAddRows = false;
+                    TableDataGrid.IsReadOnly = true;
+                }
+            }
+        }
 
         public ManagePage()
         {
@@ -46,14 +82,14 @@ namespace StudentManager.View
             ClassesList = managePageVM.GetClasses();
 
         }
-
+        #region 表格选择
         private void TermsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Term = TermsListBox.SelectedItem.ToString();
             if (Class != string.Empty)
             {
-                string tableName = managePageVM.FetchTableName(Term, Class);
-                TableDataGrid.ItemsSource = managePageVM.FetchTable(tableName);
+                SelectedTable = managePageVM.FetchTableName(Term, Class);
+                DGItemsSource = managePageVM.FetchTable(SelectedTable);
             }
             else { ClassesListBox.IsEnabled = true; }
         }
@@ -63,15 +99,49 @@ namespace StudentManager.View
             Class = ClassesListBox.SelectedItem.ToString();
             if (Term != string.Empty)
             {
-                string tableName = managePageVM.FetchTableName(Term, Class);
-                TableDataGrid.ItemsSource = managePageVM.FetchTable(tableName);
+                SelectedTable = managePageVM.FetchTableName(Term, Class);
+                DGItemsSource = managePageVM.FetchTable(SelectedTable);
             }
         }
+        #endregion
 
-        private void btnInsert_Click(object sender, RoutedEventArgs e)
+        #region ToggleButton
+        private void tbtnInsert_Checked(object sender, RoutedEventArgs e)
         {
-            insertionView.Title = "插入行";
-            insertionView.ShowDialog();
+            tbtnInsert.Content = "编辑模式";
+            IsEditMode = true;
+            btnDelRow.IsEnabled = true;
+        }
+
+        private void tbtnInsert_Unchecked(object sender, RoutedEventArgs e)
+        {
+            tbtnInsert.Content = "浏览模式";
+            IsEditMode = false;
+            btnDelRow.IsEnabled = false;
+        }
+        #endregion
+
+        private void btnSaveChange_Click(object sender, RoutedEventArgs e)
+        {
+            btnSaveChange.IsEnabled = false;
+            tbBottomInfo.Visibility = Visibility.Hidden;
+            managePageVM.UpdateDatabase(DGItemsSource, SelectedTable);
+        }
+
+        private void TableDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            btnSaveChange.IsEnabled = true;
+            tbBottomInfo.Visibility = Visibility.Visible;
+        }
+
+        private void btnDelRow_Click(object sender, RoutedEventArgs e)
+        {
+            if (DGSelectedIdx != -1 && DGSelectedIdx < DGItemsSource.Count)
+            {
+                DGItemsSource.RemoveAt(DGSelectedIdx);
+                TableDataGrid.ItemsSource = emptyList;
+                TableDataGrid.ItemsSource = DGItemsSource;
+            }
         }
     }
 }
