@@ -114,4 +114,4 @@ jobs:
       with:
         name: MSIX Package
         #path: ${{ env.Wap_Project_Directory }}\AppPackages
-        path: ${{ env.Wap_Project_Directory }}\bin\Release\netcoreapp3.1
+        path: D:\a\FinalDesign-StudentManager\FinalDesign-StudentManager\bin\Release\netcoreapp3.1
