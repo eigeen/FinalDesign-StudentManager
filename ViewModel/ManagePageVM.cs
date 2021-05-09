@@ -30,7 +30,9 @@ namespace StudentManager.ViewModel
         {
             cmd.CommandText = "SELECT * FROM sqlite_master WHERE 'table'='Info'";
             reader = cmd.ExecuteReader();
-            if (!reader.Read())
+            bool existInfoTable = !reader.Read();
+            reader.Close();
+            if (!existInfoTable)
             {
                 reader.Close();
                 cmd.CommandText = @"CREATE TABLE 'Info' (
