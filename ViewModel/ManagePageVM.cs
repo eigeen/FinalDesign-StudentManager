@@ -32,7 +32,7 @@ namespace StudentManager.ViewModel
             reader = cmd.ExecuteReader();
             bool existInfoTable = !reader.Read();
             reader.Close();
-            if (!existInfoTable)
+            if (existInfoTable)
             {
                 reader.Close();
                 cmd.CommandText = @"CREATE TABLE 'Info' (
@@ -51,7 +51,7 @@ namespace StudentManager.ViewModel
         /// <returns>学期名</returns>
         public List<string> GetTerms()
         {
-            cmd.CommandText = "SELECT DISTINCT Term FROM Info;";
+            cmd.CommandText = "SELECT DISTINCT Term FROM Info";
             reader = cmd.ExecuteReader();
 
             List<string> terms = new List<string> { };
