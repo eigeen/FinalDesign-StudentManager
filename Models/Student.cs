@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StudentManager.Model
+namespace StudentManager.Models
 {
-    public class StudentModel
+    public class Student
     {
         public string Id { get; set; }
         public string Name { get; set; }

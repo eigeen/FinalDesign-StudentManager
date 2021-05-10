@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using StudentManager.View;
+using StudentManager.Views;
 using Microsoft.Data.Sqlite;
 
 namespace WpfProject
@@ -41,7 +41,7 @@ namespace WpfProject
                 var selectedItem = (ModernWpf.Controls.NavigationViewItem)args.SelectedItem;
                 string selectedItemTag = (string)selectedItem.Tag;
                 sender.Header = selectedItemTag;
-                string pageName = $"StudentManager.View.{selectedItemTag}";
+                string pageName = $"StudentManager.Views.{selectedItemTag}";
                 Type pageType = typeof(HomePage).Assembly.GetType(pageName);
                 contentFrame.Navigate(pageType);
             }

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using StudentManager.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Data.Sqlite;
-using StudentManager.Model;
 
-namespace StudentManager.ViewModel
+namespace StudentManager.Access
 {
-    class ManagePageVM
+
+    class DataAccess
     {
         private SqliteConnection conn;
         private SqliteCommand cmd;
@@ -15,7 +16,7 @@ namespace StudentManager.ViewModel
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ManagePageVM()
+        public DataAccess()
         {
             conn = new SqliteConnection("Data Source = Data.db");
             conn.Open();
@@ -24,76 +25,72 @@ namespace StudentManager.ViewModel
         }
 
         /// <summary>
-        /// 若数据库为空，则新建Info表
+        /// 析构函数
+        /// </summary>
+        ~DataAccess()
+        {
+            conn.Close();
+        }
+
+        /// <summary>
+        /// 若首次创建数据库，则新建Info表
         /// </summary>
         private void InitDB()
         {
-            cmd.CommandText = "SELECT * FROM sqlite_master WHERE 'table'='Info'";
-            reader = cmd.ExecuteReader();
-            bool existInfoTable = !reader.Read();
-            reader.Close();
-            if (existInfoTable)
+            if (!ExistTable("Info"))
             {
+                cmd.CommandText = "SELECT * FROM sqlite_master WHERE 'table'='Info'";
+                reader = cmd.ExecuteReader();
+                bool existInfoTable = !reader.Read();
                 reader.Close();
-                cmd.CommandText = @"CREATE TABLE 'Info' (
+                if (existInfoTable)
+                {
+                    reader.Close();
+                    cmd.CommandText = @"CREATE TABLE 'Info' (
                                         Term TEXT NOT NULL,
 	                                    Class TEXT NOT NULL,
 	                                    TableName TEXT NOT NULL,
                                         Subjects TEXT)";
-                cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
+
+                }
             }
         }
 
-        #region ListBox列表获取
         /// <summary>
-        /// 获得学期列表
+        /// 获取Info表内指定列内容（去重）
         /// </summary>
-        /// <returns>学期名</returns>
-        public List<string> GetTerms()
+        /// <param name="columnName">列名</param>
+        /// <param name="isDistinct">是否去重</param>
+        /// <returns></returns>
+        public List<string> FetchInfoColumn(string columnName, bool isDistinct = true)
         {
-            cmd.CommandText = "SELECT DISTINCT Term FROM Info";
+            if (isDistinct)
+            {
+                cmd.CommandText = $"SELECT DISTINCT {columnName} FROM Info";
+            }
+            else
+            {
+                cmd.CommandText = $"SELECT {columnName} FROM Info";
+            }
             reader = cmd.ExecuteReader();
 
-            List<string> terms = new List<string> { };
-            int termIdx = reader.GetOrdinal("Term");
+            List<string> ls = new List<string> { };
+            int cellIdx = reader.GetOrdinal(columnName);
             while (reader.Read())
             {
-                string termName = reader.GetString(termIdx);
-                terms.Add(termName);
+                string cell = reader.GetString(cellIdx);
+                ls.Add(cell);
             }
             reader.Close();
-            //terms.Sort();
-            //terms.Reverse();
-            return terms;
+            return ls;
         }
-        /// <summary>
-        /// 获得班级列表
-        /// </summary>
-        /// <returns>班级名</returns>
-        public List<string> GetClasses()
-        {
-            cmd.CommandText = "SELECT DISTINCT Class FROM Info;";
-            reader = cmd.ExecuteReader();
-
-            List<string> classes = new List<string> { };
-            int classIdx = reader.GetOrdinal("Class");
-            while (reader.Read())
-            {
-                string className = reader.GetString(classIdx);
-                classes.Add(className);
-            }
-            reader.Close();
-            //classes.Sort();
-            //classes.Reverse();
-            return classes;
-        }
-        #endregion
 
         /// <summary>
         /// 创建Term_Class表
         /// </summary>
-        /// <param name="tableName"></param>
-        public void CreateTable(string tableName)
+        /// <param name="tableName">表名</param>
+        public void CreateModelTable(string tableName)
         {
             cmd.CommandText = @$"CREATE TABLE {tableName} (
                                     ID TEXT NOT NULL, 
@@ -106,29 +103,28 @@ namespace StudentManager.ViewModel
         }
 
         /// <summary>
-        /// 获取表的内容
+        /// 获取Model表的内容
         /// </summary>
-        /// <param name="tableName">源表名</param>
-        /// <returns>DataGrid所需的数据源</returns>
-        public List<StudentModel> FetchTable(string tableName)
+        /// <param name="tableName">表名</param>
+        /// <returns></returns>
+        public List<Student> FetchTable(string tableName)
         {
             if (!ExistTable(tableName))
             {
-                CreateTable(tableName);
-                return new List<StudentModel> { };
+                CreateModelTable(tableName);
+                return new List<Student> { };
             }
 
             cmd.CommandText = $"SELECT * FROM {tableName}";
             reader = cmd.ExecuteReader();
 
-            var columns = new List<StudentModel> { };
+            var rows = new List<Student> { };
             int IDIdx = reader.GetOrdinal("ID");
             int NameIdx = reader.GetOrdinal("Name");
             int SexIdx = reader.GetOrdinal("Sex");
             int AgeIdx = reader.GetOrdinal("Age");
             int ScoreIdx = reader.GetOrdinal("Score");
             int GPAIdx = reader.GetOrdinal("GPA");
-
             while (reader.Read())
             {
                 string id = reader.GetString(IDIdx);
@@ -137,7 +133,7 @@ namespace StudentManager.ViewModel
                 int age = reader.GetInt32(AgeIdx);
                 double score = reader.GetDouble(ScoreIdx);
                 double GPA = reader.GetDouble(GPAIdx);
-                columns.Add(new StudentModel()
+                rows.Add(new Student()
                 {
                     Id = id,
                     Name = name,
@@ -148,7 +144,7 @@ namespace StudentManager.ViewModel
                 });
             }
             reader.Close();
-            return columns;
+            return rows;
         }
 
         /// <summary>
@@ -171,7 +167,7 @@ namespace StudentManager.ViewModel
         /// <param name="termName">学期名</param>
         /// <param name="className">班级名</param>
         /// <returns>表名</returns>
-        public string FetchTableName(string termName, string className)
+        public string GetTableName(string termName, string className)
         {
             cmd.CommandText = $"SELECT * FROM Info WHERE Term='{termName}' AND Class='{className}';";
             reader = cmd.ExecuteReader();
@@ -182,16 +178,21 @@ namespace StudentManager.ViewModel
             return tableName;
         }
 
-        public void UpdateDatabase(List<StudentModel> newList, string tableName)
+        /// <summary>
+        /// 更新数据库
+        /// </summary>
+        /// <param name="data">源数据</param>
+        /// <param name="tableName">Model表名</param>
+        public void UpdateDatabase(List<Student> data, string tableName)
         {
             //删除表
             cmd.CommandText = $"DROP TABLE {tableName}";
             cmd.ExecuteNonQuery();
 
             //新建表
-            this.CreateTable(tableName);
+            CreateModelTable(tableName);
 
-            foreach (StudentModel row in newList)
+            foreach (Student row in data)
             {
                 //插入新数据
                 cmd.CommandText = @$"INSERT INTO {tableName} VALUES (
