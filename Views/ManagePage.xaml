@@ -7,9 +7,9 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:app="WpfTest2_MVVM.App" 
-         xmlns:viewmodels="clr-namespace:StudentManager.ViewModels"
-         d:DataContext="{d:DesignInstance Type=viewmodels:ManagePageViewModel}"
-         mc:Ignorable="d"
+        xmlns:viewmodels="clr-namespace:StudentManager.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ManagePageViewModel}"
+        mc:Ignorable="d"
         Title="ManagePage">
 
     <Page.Resources>
@@ -46,17 +46,22 @@
                       CanUserSortColumns="True"
                       CanUserAddRows="False"
                       IsReadOnly="True"
-                      ItemsSource="{Binding DataGridSource}"
+                      LostFocus="TableDataGrid_LostFocus"
+                      ItemsSource="{Binding DataGridSource,Mode=TwoWay}"
                       SelectedIndex="{Binding DataGridSelectedIdx}"
                       RowEditEnding="TableDataGrid_RowEditEnding">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Id}" Width="120" Header="学号"/>
-                    <DataGridTextColumn Binding="{Binding Name}" Width="100" Header="姓名"/>
-                    <DataGridTextColumn Binding="{Binding Sex}" Width="100" Header="性别"/>
-                    <DataGridTextColumn Binding="{Binding Age}" Width="100" Header="年龄"/>
+                    <DataGridTextColumn Binding="{Binding Name}" Width="100" Header="课程"/>
+                    <DataGridTextColumn Binding="{Binding ID}" Width="100" Header="课程ID"/>
+                    <DataGridTextColumn Binding="{Binding Credit}" Width="100" Header="学分"/>
                     <DataGridTextColumn Binding="{Binding Score}" Width="100" Header="分数"/>
-                    <DataGridTextColumn Binding="{Binding GPA}" Width="100" Header="学分"/>
+                    <DataGridTextColumn Binding="{Binding GPA}" Width="100" Header="绩点"/>
                 </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="MenuItemDel" Header="删除选中行" IsEnabled="False" Click="MenuItemDel_Click"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
             </DataGrid>
 
             <!--底部工具栏-->
@@ -85,7 +90,7 @@
                                   Width="80" 
                                   Checked="tbtnInsert_Checked"
                                   Unchecked="tbtnInsert_Unchecked"/>
-                    <Button x:Name="btnDelRow" Content="删除行" IsEnabled="False" Click="btnDelRow_Click"/>
+                    <!--<Button x:Name="btnDelRow" Content="删除行" IsEnabled="False" Click="btnDelRow_Click"/>-->
                     <TextBlock x:Name="tbBottomInfo"
                                Text="对表格进行修改后请及时保存更改。"
                                Width="400"
@@ -103,30 +108,55 @@
         <!--管理工具 右侧操作区-->
         <ScrollViewer Grid.Column="1" Margin="10,10">
             <!--表选择器-->
-            <ui:SimpleStackPanel Background="#EEE">
-                <!--学期-->
-                <TextBlock Text="学期" Style="{StaticResource TextBlockStd}" Margin="10 10 10 5" />
-                <Border Margin="10 0 10 10" Background="#DDD">
-                    <ListBox x:Name="TermsListBox"
-                             ItemsSource="{Binding TermsList}" 
-                             Margin="4,4"
-                             Height="150"
-                             SelectionChanged="TermsListBox_SelectionChanged">
-                    </ListBox>
-                </Border>
+            <StackPanel Background="#EEE">
+                <!--学院-->
+                <TextBlock Text="学院" Style="{StaticResource TextBlockStd}" Margin="10 10 10 5" />
+                <ComboBox x:Name="cbSchool" 
+                          Margin="10,0"
+                          Width="200"
+                          IsEditable="False"
+                          ItemsSource="{Binding ComboSchools}"
+                          DisplayMemberPath="Text"
+                          SelectedValuePath="Text" SelectionChanged="cbSchool_SelectionChanged">
+                </ComboBox>
+
+                <!--专业-->
+                <TextBlock Text="专业" Style="{StaticResource TextBlockStd}" Margin="10 10 10 5" />
+                <ComboBox x:Name="cbMajor" 
+                          Margin="10,0"
+                          Width="200"
+                          IsEditable="False"
+                          ItemsSource="{Binding ComboMajors}"
+                          DisplayMemberPath="Text"
+                          SelectedValuePath="Text" SelectionChanged="cbMajor_SelectionChanged">
+                </ComboBox>
 
                 <!--班级-->
                 <TextBlock Text="班级" Style="{StaticResource TextBlockStd}" Margin="10 10 10 5" />
-                <Border Margin="10 0 10 0" Background="#DDD">
-                    <ListBox x:Name="ClassesListBox"
-                             ItemsSource="{Binding ClassesList}" 
-                             Margin="4,4"
-                             Height="150"
-                             SelectionChanged="ClassesListBox_SelectionChanged">
-                    </ListBox>
-                </Border>
+                <ComboBox x:Name="cbClass" 
+                          Margin="10,0"
+                          Width="200"
+                          IsEditable="False"
+                          ItemsSource="{Binding ComboClasses}"
+                          DisplayMemberPath="Text"
+                          SelectedValuePath="Text" SelectionChanged="cbClass_SelectionChanged">
+                </ComboBox>
 
-            </ui:SimpleStackPanel>
+                <!--学生-->
+                <TextBlock Text="学生" Style="{StaticResource TextBlockStd}" Margin="10 10 10 5" />
+
+                <ListBox x:Name="lbStudent" 
+                         Margin="10,0"
+                         BorderThickness="1" 
+                         MinHeight="80"
+                         MaxHeight="250"
+                         DisplayMemberPath="Text"
+                         ItemsSource="{Binding ListBoxStudents,Mode=TwoWay}"
+                         SelectionChanged="lbStudent_SelectionChanged">
+                </ListBox>
+
+
+            </StackPanel>
         </ScrollViewer>
     </Grid>
 </ui:Page>

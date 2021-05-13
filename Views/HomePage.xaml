@@ -7,14 +7,11 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
         Title="HomePage">
+
     <ScrollViewer>
-        <ui:SimpleStackPanel
-            Spacing="24"
-            Margin="24 10 24 20">
-
-            <Button x:Name="Button"
-                    Content="Enabled button" />
-
-        </ui:SimpleStackPanel>
+        <StackPanel Margin="20,20">
+            <TextBlock Text="欢迎使用" FontSize="60"/>
+            <TextBlock Text="学生成绩管理系统" FontSize="30"/>
+        </StackPanel>
     </ScrollViewer>
 </ui:Page>

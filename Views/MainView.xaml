@@ -26,7 +26,8 @@
                              Grid.RowSpan="2">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem Content="主页" Tag="HomePage" Icon="Home" />
-                <muxc:NavigationViewItem Content="管理" Tag="ManagePage" Icon="Page2"/>
+                <muxc:NavigationViewItem Content="详细信息" Tag="InfoPage" Icon="List" />
+                <muxc:NavigationViewItem Content="学生管理" Tag="ManagePage" Icon="Page2"/>
                 <!--<muxc:NavigationViewItem Content="Menu Item3" Tag="SamplePage3" Icon="Refresh" />
                 <muxc:NavigationViewItem Content="Menu Item4" Tag="SamplePage4" Icon="Download" />-->
             </muxc:NavigationView.MenuItems>

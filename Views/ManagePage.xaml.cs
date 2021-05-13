@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Text;
 using System.Windows;
@@ -23,12 +25,6 @@ namespace StudentManager.Views
     /// </summary>
     public partial class ManagePage
     {
-        private string selectedTerm = string.Empty;
-        private string selectedClass = string.Empty;
-        public int DataGridSelectedIdx { get; set; }
-
-        private List<string> emptyList = new List<string> { };
-
 
         private bool isEditMode;
 
@@ -50,42 +46,34 @@ namespace StudentManager.Views
                 }
             }
         }
-        ManagePageViewModel managePageObj = new ManagePageViewModel();
+        private ManagePageViewModel managePageObj;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public ManagePage()
         {
             InitializeComponent();
+            managePageObj = new ManagePageViewModel();
             this.DataContext = managePageObj;
 
         }
-        #region 表格选择
-        private void TermsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            selectedTerm = TermsListBox.SelectedItem.ToString();
-            managePageObj.SelectionChanged(selectedTerm, selectedClass);
-        }
 
-        private void ClassesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            selectedClass = ClassesListBox.SelectedItem.ToString();
-            managePageObj.SelectionChanged(selectedTerm, selectedClass);
-        }
-
-        #endregion
 
         #region ToggleButton
         private void tbtnInsert_Checked(object sender, RoutedEventArgs e)
         {
             tbtnInsert.Content = "编辑模式";
             IsEditMode = true;
-            btnDelRow.IsEnabled = true;
+            MenuItemDel.IsEnabled = true;
+
         }
 
         private void tbtnInsert_Unchecked(object sender, RoutedEventArgs e)
         {
             tbtnInsert.Content = "浏览模式";
             IsEditMode = false;
-            btnDelRow.IsEnabled = false;
+            MenuItemDel.IsEnabled = false;
+
         }
         #endregion
 
@@ -93,7 +81,7 @@ namespace StudentManager.Views
         {
             btnSaveChange.IsEnabled = false;
             tbBottomInfo.Visibility = Visibility.Hidden;
-            managePageObj.UpdateDatabase(managePageObj.SelectedTable);
+            managePageObj.UpdateData(managePageObj.DataGridSource);
         }
 
         private void TableDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
@@ -102,12 +90,62 @@ namespace StudentManager.Views
             tbBottomInfo.Visibility = Visibility.Visible;
         }
 
-        private void btnDelRow_Click(object sender, RoutedEventArgs e)
+        private void cbSchool_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DataGridSelectedIdx != -1 && DataGridSelectedIdx < managePageObj.DataGridSource.Count)
+            cbMajor.SelectedIndex = -1;
+            cbClass.SelectedIndex = -1;
+            lbStudent.SelectedIndex = -1;
+            managePageObj.SelectedSchool = (sender as ComboBox).SelectedValue.ToString();
+            managePageObj.LoadComboBoxMajor();
+        }
+
+        private void cbMajor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((sender as ComboBox).SelectedIndex != -1)
             {
-                managePageObj.DataGridSource.RemoveAt(DataGridSelectedIdx);
+                cbClass.SelectedIndex = -1;
+                lbStudent.SelectedIndex = -1;
+                managePageObj.SelectedMajor = (sender as ComboBox).SelectedValue.ToString();
+                managePageObj.LoadComboBoxClass();
             }
+        }
+
+        private void cbClass_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((sender as ComboBox).SelectedIndex != -1)
+            {
+                lbStudent.SelectedIndex = -1;
+                managePageObj.SelectedClass = (sender as ComboBox).SelectedValue.ToString();
+                managePageObj.LoadListBoxStudent();
+            }
+            else { lbStudent.ItemsSource = new ObservableCollection<ListBoxElement> { }; }
+        }
+
+        private void lbStudent_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((sender as ListBox).SelectedIndex != -1)
+            {
+                ListBoxElement item = (ListBoxElement)(sender as ListBox).SelectedItem;
+                var selectedValue = item.Text;
+                managePageObj.LoadDataGrid(selectedValue);
+            }
+        }
+
+        private void MenuItemDel_Click(object sender, RoutedEventArgs e)
+        {
+            btnSaveChange.IsEnabled = true;
+            int selected = managePageObj.DataGridSelectedIdx;
+            if (selected != -1 && selected < managePageObj.DataGridSource.Count)
+            {
+                var newList = managePageObj.DataGridSource;
+                newList.RemoveAt(selected);
+                managePageObj.DataGridSource = newList;
+            }
+        }
+
+        private void TableDataGrid_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TableDataGrid.SelectedIndex = -1;
         }
     }
 }
