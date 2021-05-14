@@ -34,5 +34,27 @@ namespace StudentManager.Views
             infoPageObj.LoadData();
             infoPageObj.ListBoxMajor = new ObservableCollection<ListBoxElement> { };
         }
+
+        private void ListBoxSchool_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((sender as ListBox).SelectedIndex != -1)
+            {
+                infoPageObj.ListBoxMajor = new ObservableCollection<ListBoxElement> { };
+                infoPageObj.ListBoxClass = new ObservableCollection<ListBoxElement> { };
+                infoPageObj.SelectedSchool = ((ListBoxElement)(sender as ListBox).SelectedItem).Text;
+                infoPageObj.LoadListBoxMajor();
+            }
+        }
+
+        private void ListBoxMajor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((sender as ListBox).SelectedIndex != -1)
+            {
+                infoPageObj.ListBoxClass = new ObservableCollection<ListBoxElement> { };
+                infoPageObj.SelectedMajor = ((ListBoxElement)(sender as ListBox).SelectedItem).Text;
+                infoPageObj.LoadListBoxClass();
+            }
+        }
     }
 }
+    

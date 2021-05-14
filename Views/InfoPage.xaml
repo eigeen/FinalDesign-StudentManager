@@ -47,7 +47,8 @@
                     <ListBox x:Name="ListBoxSchool" 
                              Style="{StaticResource ListBoxStd}"
                              DisplayMemberPath="Text"
-                             ItemsSource="{Binding ListBoxSchool}">
+                             ItemsSource="{Binding ListBoxSchool}"
+                             SelectionChanged="ListBoxSchool_SelectionChanged">
                     </ListBox>
                 </StackPanel>
 
@@ -60,7 +61,8 @@
                     <ListBox x:Name="ListBoxMajor" 
                              Style="{StaticResource ListBoxStd}"
                              DisplayMemberPath="Text"
-                             ItemsSource="{Binding ListBoxMajor}">
+                             ItemsSource="{Binding ListBoxMajor}"
+                             SelectionChanged="ListBoxMajor_SelectionChanged">
                     </ListBox>
                 </StackPanel>
 

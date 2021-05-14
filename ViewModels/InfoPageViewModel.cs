@@ -12,9 +12,11 @@ namespace StudentManager.ViewModels
     {
         public InfoPageViewModel()
         {
-            js = new JsonAccess();
-            js.SchoolPath = "_SchoolData.json";
-            js.GradePath = "_GradeData.json";
+            js = new JsonAccess
+            {
+                SchoolPath = "_SchoolData.json",
+                GradePath = "_GradeData.json"
+            };
 
         }
         private JsonAccess js;
@@ -59,7 +61,8 @@ namespace StudentManager.ViewModels
             }
         }
 
-
+        public string SelectedSchool { get; set; }
+        public string SelectedMajor { get; set; }
 
         public void LoadData()
         {
@@ -83,6 +86,34 @@ namespace StudentManager.ViewModels
                 return names;
             }
             schoolRoot.Schools.ForEach(item => { names.Add(item.Name); });
+            return names;
+        }
+
+        public void LoadListBoxMajor()
+        {
+            var majorsList = GetMajorsList();
+            ListBoxMajor = new ObservableCollection<ListBoxElement> { };
+            majorsList.ForEach(item => { ListBoxMajor.Add(new ListBoxElement { Text = item }); });
+        }
+
+        private List<string> GetMajorsList()
+        {
+            var names = new List<string> { };
+            schoolRoot.Schools.Find(e => e.Name == SelectedSchool).Majors.ForEach(e => names.Add(e.Name));
+            return names;
+        }
+
+        public void LoadListBoxClass()
+        {
+            var classesList = GetClassesList();
+            ListBoxClass = new ObservableCollection<ListBoxElement> { };
+            classesList.ForEach(item => { ListBoxClass.Add(new ListBoxElement { Text = item }); });
+        }
+
+        private List<string> GetClassesList()
+        {
+            var names = new List<string> { };
+            schoolRoot.Schools.Find(e => e.Name == SelectedSchool).Majors.Find(e => e.Name == SelectedMajor).Classes.ForEach(e => names.Add(e.Name));
             return names;
         }
     }
