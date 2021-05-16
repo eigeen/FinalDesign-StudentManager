@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Controls;
 using StudentManager.Access;
 using StudentManager.Models;
+using StudentManager.Views;
 
 namespace StudentManager.ViewModels
 {
@@ -26,6 +27,11 @@ namespace StudentManager.ViewModels
             DataGridSource = new ObservableCollection<CoursesItem> { };
 
         }
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            System.Environment.Exit(0);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private ObservableCollection<CoursesItem> dataGridSource;
@@ -101,6 +107,8 @@ namespace StudentManager.ViewModels
             }
         }
 
+
+
         private string selectedClass;
 
         public string SelectedClass
@@ -121,9 +129,10 @@ namespace StudentManager.ViewModels
             set
             {
                 selectedSchoolObj = value;
-                //LoadComboBoxMajor();
             }
         }
+
+
 
         private MajorsItem selectedMajorObj;
 
@@ -142,6 +151,8 @@ namespace StudentManager.ViewModels
         }
 
         private ObservableCollection<ListBoxElement> listBoxStudent;
+
+
 
         public ObservableCollection<ListBoxElement> ListBoxStudents
         {
@@ -240,22 +251,25 @@ namespace StudentManager.ViewModels
         }
 
         /// <summary>
-        /// 载入学校列表
+        /// 载入学院列表
         /// </summary>
-        private void LoadComboBoxSchool()
+        public void LoadComboBoxSchool()
         {
             var schoolsList = GetSchoolsList();
             ComboSchools = new ObservableCollection<ComboBoxElement> { };
             schoolsList.ForEach(item => { ComboSchools.Add(new ComboBoxElement { Text = item }); });
+            ComboSchools.Add(new ComboBoxElement { Text = "--添加--" });
+
         }
         /// <summary>
-        /// 载入学科列表
+        /// 载入专业列表
         /// </summary>
         public void LoadComboBoxMajor()
         {
             var majorsList = GetMajorsList();
             ComboMajors = new ObservableCollection<ComboBoxElement> { };
             majorsList.ForEach(item => { ComboMajors.Add(new ComboBoxElement { Text = item }); });
+            ComboMajors.Add(new ComboBoxElement { Text = "--添加--" });
         }
         /// <summary>
         /// 载入班级列表
@@ -265,6 +279,7 @@ namespace StudentManager.ViewModels
             var classesList = GetClassesList();
             ComboClasses = new ObservableCollection<ComboBoxElement> { };
             classesList.ForEach(item => { ComboClasses.Add(new ComboBoxElement { Text = item }); });
+            ComboClasses.Add(new ComboBoxElement { Text = "--添加--" });
         }
         /// <summary>
         /// 载入学生列表
@@ -304,6 +319,24 @@ namespace StudentManager.ViewModels
             }
             var studentID = SelectedStudentObj.ID;
             js.UpdateGrade(ls, studentID);
+        }
+
+        public void RefreshComboBox()
+        {
+            schoolRoot = js.SchoolLoad();
+        }
+        public void AddComboBoxSchool()
+        {
+            MessageBoxAddItems msgBox = new MessageBoxAddItems();
+            msgBox.ShowDialog();
+        }
+        public void AddComboBoxMajor()
+        {
+            throw new NotImplementedException();
+        }
+        public void AddComboBoxClass()
+        {
+            throw new NotImplementedException();
         }
     }
 }

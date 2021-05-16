@@ -7,6 +7,12 @@ namespace StudentManager.Models
 {
     public class ComboBoxElement
     {
-        public string Text { get; set; }
+        private string text;
+
+        public string Text
+        {
+            get { return text; }
+            set{text = value;}
+        }
     }
 }

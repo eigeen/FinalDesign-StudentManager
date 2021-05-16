@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -48,8 +49,6 @@ namespace StudentManager.Views
         }
         private ManagePageViewModel managePageObj;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public ManagePage()
         {
             InitializeComponent();
@@ -92,17 +91,33 @@ namespace StudentManager.Views
 
         private void cbSchool_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            cbMajor.SelectedIndex = -1;
-            cbClass.SelectedIndex = -1;
-            lbStudent.SelectedIndex = -1;
-            managePageObj.SelectedSchool = (sender as ComboBox).SelectedValue.ToString();
-            managePageObj.LoadComboBoxMajor();
+            if ((sender as ComboBox).SelectedIndex != -1)
+            {
+                if ((sender as ComboBox).SelectedValue.ToString() == "--添加--")
+                {
+                    (sender as ComboBox).SelectedIndex = -1;
+                    managePageObj.AddComboBoxSchool();
+                    managePageObj.RefreshComboBox();
+                    managePageObj.LoadComboBoxSchool();
+                    return;
+                }
+                cbMajor.SelectedIndex = -1;
+                cbClass.SelectedIndex = -1;
+                lbStudent.SelectedIndex = -1;
+                managePageObj.SelectedSchool = (sender as ComboBox).SelectedValue.ToString();
+                managePageObj.LoadComboBoxMajor();
+            }
         }
 
         private void cbMajor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if ((sender as ComboBox).SelectedIndex != -1)
             {
+                if ((sender as ComboBox).SelectedValue.ToString() == "--添加--")
+                {
+                    (sender as ComboBox).SelectedIndex = -1;
+                    managePageObj.AddComboBoxMajor();
+                }
                 cbClass.SelectedIndex = -1;
                 lbStudent.SelectedIndex = -1;
                 managePageObj.SelectedMajor = (sender as ComboBox).SelectedValue.ToString();
@@ -114,6 +129,11 @@ namespace StudentManager.Views
         {
             if ((sender as ComboBox).SelectedIndex != -1)
             {
+                if ((sender as ComboBox).SelectedValue.ToString() == "--添加--")
+                {
+                    (sender as ComboBox).SelectedIndex = -1;
+                    managePageObj.AddComboBoxClass();
+                }
                 lbStudent.SelectedIndex = -1;
                 managePageObj.SelectedClass = (sender as ComboBox).SelectedValue.ToString();
                 managePageObj.LoadListBoxStudent();

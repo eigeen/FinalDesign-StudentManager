@@ -29,7 +29,6 @@ namespace StudentManager.Models
         /// </summary>
         public double GPA { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public class GradesItem

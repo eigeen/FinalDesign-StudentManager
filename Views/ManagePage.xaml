@@ -144,7 +144,6 @@
 
                 <!--学生-->
                 <TextBlock Text="学生" Style="{StaticResource TextBlockStd}" Margin="10 10 10 5" />
-
                 <ListBox x:Name="lbStudent" 
                          Margin="10,0"
                          BorderThickness="1" 
@@ -155,6 +154,8 @@
                          SelectionChanged="lbStudent_SelectionChanged">
                 </ListBox>
 
+                <!--添加学生-->
+                <Button x:Name="BtnAddStudent" Content="添加学生" HorizontalAlignment="Center" Margin="10 20 10 5"/>
 
             </StackPanel>
         </ScrollViewer>
