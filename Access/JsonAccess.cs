@@ -82,10 +82,16 @@ namespace StudentManager.Access
             {
                 sw.Write(str);
             }
-        }        
-        
-
-        public void UpdateSchoolRoot(List<string> ls, string target)
+        }
+        /// <summary>
+        /// 更新SchoolRoot
+        /// </summary>
+        /// <param name="ls"></param>
+        /// <param name="target"></param>
+        /// <param name="school"></param>
+        /// <param name="major"></param>
+        /// <param name="className"></param>
+        public void UpdateSchoolRoot(List<string> ls, string target, string school, string major, string className)
         {
             var schoolRoot = this.SchoolLoad();
             if (target == "School")
@@ -94,9 +100,55 @@ namespace StudentManager.Access
                     new SchoolsItem { Name = e, ID = "", Tag = "", Majors = new List<MajorsItem> { } }
                     ));
             }
+            else if (target == "Major")
+            {
+                if (schoolRoot.Schools.Find(e => e.Name == school).Majors == null)
+                {
+                    schoolRoot.Schools.Find(e => e.Name == school).Majors = new List<MajorsItem> { };
+                }
+                ls.ForEach(e => schoolRoot.Schools.Find(e => e.Name == school).Majors.Add(
+                    new MajorsItem { Name = e, ID = "", Tag = "", Desc = "" }
+                    ));
+            }
+            else if (target == "Class")
+            {
+                if (schoolRoot.Schools.Find(c => c.Name == school).Majors.Find(m => m.Name == major).Classes == null)
+                {
+                    schoolRoot.Schools.Find(c => c.Name == school).Majors.Find(m => m.Name == major).Classes = new List<ClassesItem> { };
+                }
+                ls.ForEach(e => schoolRoot.Schools.Find(c => c.Name == school).Majors.Find(m => m.Name == major).Classes.Add(
+                    new ClassesItem { Name = e, Students = new List<StudentsItem> { }, StudentCount = 0 }
+                    ));
+            }
+            else if (target == "Student")
+            {
+                ls.ForEach(e => schoolRoot.Schools.Find(e => e.Name == school).Majors.Find(e => e.Name == major).Classes.Find(e => e.Name == className).Students.Add(
+                    new StudentsItem { Name = e, Age = 0, Desc = "", ID = "", Sex = -1 }
+                    ));
+            }
 
             var str = JsonConvert.SerializeObject(schoolRoot);
             using (StreamWriter sw = new StreamWriter(schoolPath))
+            {
+                sw.Write(str);
+            }
+        }
+        /// <summary>
+        /// 更新GradeRoot
+        /// </summary>
+        /// <param name="ls"></param>
+        public void UpdateGradeRoot(List<AddStudentModel> ls)
+        {
+            var gradeRoot = this.GradeLoad();
+            var newls = new List<GradesItem> { };
+            foreach (var item in ls)
+            {
+                newls.Add(new GradesItem { Name = item.StuName, ID = item.StuID, Courses = new List<CoursesItem> { } }); ;
+            }
+            newls.ForEach(item => gradeRoot.Grades.Add(item));
+
+            var str = JsonConvert.SerializeObject(gradeRoot);
+            using (StreamWriter sw = new StreamWriter(gradePath))
             {
                 sw.Write(str);
             }

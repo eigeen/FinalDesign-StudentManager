@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ModernWpf.Controls;
 using StudentManager.Access;
 using StudentManager.Models;
 using StudentManager.ViewModels;
@@ -57,24 +58,19 @@ namespace StudentManager.Views
 
         }
 
-
-        #region ToggleButton
-        private void tbtnInsert_Checked(object sender, RoutedEventArgs e)
+        private void SwitchInsertMode_Toggled(object sender, RoutedEventArgs e)
         {
-            tbtnInsert.Content = "编辑模式";
-            IsEditMode = true;
-            MenuItemDel.IsEnabled = true;
-
+            if ((sender as ToggleSwitch).IsOn == true)
+            {
+                IsEditMode = true;
+                MenuItemDel.IsEnabled = true;
+            }
+            else
+            {
+                IsEditMode = false;
+                MenuItemDel.IsEnabled = false;
+            }
         }
-
-        private void tbtnInsert_Unchecked(object sender, RoutedEventArgs e)
-        {
-            tbtnInsert.Content = "浏览模式";
-            IsEditMode = false;
-            MenuItemDel.IsEnabled = false;
-
-        }
-        #endregion
 
         private void btnSaveChange_Click(object sender, RoutedEventArgs e)
         {
@@ -97,7 +93,7 @@ namespace StudentManager.Views
                 {
                     (sender as ComboBox).SelectedIndex = -1;
                     managePageObj.AddComboBoxSchool();
-                    managePageObj.RefreshComboBox();
+                    managePageObj.RefreshSelectionBox();
                     managePageObj.LoadComboBoxSchool();
                     return;
                 }
@@ -117,6 +113,9 @@ namespace StudentManager.Views
                 {
                     (sender as ComboBox).SelectedIndex = -1;
                     managePageObj.AddComboBoxMajor();
+                    managePageObj.RefreshSelectionBox();
+                    managePageObj.LoadComboBoxMajor();
+                    return;
                 }
                 cbClass.SelectedIndex = -1;
                 lbStudent.SelectedIndex = -1;
@@ -133,6 +132,9 @@ namespace StudentManager.Views
                 {
                     (sender as ComboBox).SelectedIndex = -1;
                     managePageObj.AddComboBoxClass();
+                    managePageObj.RefreshSelectionBox();
+                    managePageObj.LoadComboBoxClass();
+                    return;
                 }
                 lbStudent.SelectedIndex = -1;
                 managePageObj.SelectedClass = (sender as ComboBox).SelectedValue.ToString();
@@ -166,6 +168,13 @@ namespace StudentManager.Views
         private void TableDataGrid_LostFocus(object sender, RoutedEventArgs e)
         {
             TableDataGrid.SelectedIndex = -1;
+        }
+
+        private void BtnAddStudent_Click(object sender, RoutedEventArgs e)
+        {
+            managePageObj.AddListBoxStudent();
+            managePageObj.RefreshSelectionBox();
+            managePageObj.LoadListBoxStudent();
         }
     }
 }

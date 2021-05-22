@@ -84,12 +84,14 @@
                 </StackPanel>-->
 
                 <StackPanel Orientation="Horizontal">
-                    <ToggleButton x:Name="tbtnInsert" 
-                                  Content="预览模式" 
-                                  Margin="10,10" 
-                                  Width="80" 
-                                  Checked="tbtnInsert_Checked"
-                                  Unchecked="tbtnInsert_Unchecked"/>
+                    <ui:ToggleSwitch x:Name="SwitchInsertMode"
+                                     Margin="20,0,0,0"
+                                     OnContent="编辑模式"
+                                     OffContent="预览模式"
+                                     IsOn="False"
+                                     Toggled="SwitchInsertMode_Toggled">
+
+                    </ui:ToggleSwitch>
                     <!--<Button x:Name="btnDelRow" Content="删除行" IsEnabled="False" Click="btnDelRow_Click"/>-->
                     <TextBlock x:Name="tbBottomInfo"
                                Text="对表格进行修改后请及时保存更改。"
@@ -155,7 +157,11 @@
                 </ListBox>
 
                 <!--添加学生-->
-                <Button x:Name="BtnAddStudent" Content="添加学生" HorizontalAlignment="Center" Margin="10 20 10 5"/>
+                <Button x:Name="BtnAddStudent" 
+                        Content="添加学生" 
+                        HorizontalAlignment="Center"
+                        Margin="10 20 10 5"
+                        Click="BtnAddStudent_Click"/>
 
             </StackPanel>
         </ScrollViewer>

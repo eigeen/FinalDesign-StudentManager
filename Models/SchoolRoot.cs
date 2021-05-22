@@ -11,7 +11,7 @@ namespace StudentManager.Models
         /// </summary>
         public string ID { get; set; }
         /// <summary>
-        /// 
+        /// 学生姓名
         /// </summary>
         public string Name { get; set; }
         /// <summary>
@@ -31,7 +31,7 @@ namespace StudentManager.Models
     public class ClassesItem
     {
         /// <summary>
-        /// 土木一班
+        /// 班级名
         /// </summary>
         public string Name { get; set; }
         /// <summary>
@@ -47,7 +47,7 @@ namespace StudentManager.Models
     public class MajorsItem
     {
         /// <summary>
-        /// 土木工程
+        /// 专业名
         /// </summary>
         public string Name { get; set; }
         /// <summary>
@@ -59,7 +59,7 @@ namespace StudentManager.Models
         /// </summary>
         public string Tag { get; set; }
         /// <summary>
-        /// 土木工程学院
+        /// 
         /// </summary>
         public string Desc { get; set; }
         /// <summary>
@@ -71,7 +71,7 @@ namespace StudentManager.Models
     public class SchoolsItem
     {
         /// <summary>
-        /// 国际学院
+        /// 学院名
         /// </summary>
         public string Name { get; set; }
         /// <summary>

@@ -132,8 +132,6 @@ namespace StudentManager.ViewModels
             }
         }
 
-
-
         private MajorsItem selectedMajorObj;
 
         public MajorsItem SelectedMajorObj
@@ -173,10 +171,10 @@ namespace StudentManager.ViewModels
             {
                 selectedStudent = value;
                 var stu = selectedClassObj.Students.Find(e => e.Name == selectedStudent);
-                SelectedStudentObj = gradeRoot.Grades.Find(e => e.ID == stu.ID);
+                selectedStudentObj = gradeRoot.Grades.Find(e => e.ID == stu.ID);
+                if (selectedStudentObj == null) { SelectedStudentObj = new GradesItem { }; }
             }
         }
-
 
         private GradesItem selectedStudentObj;
 
@@ -200,11 +198,7 @@ namespace StudentManager.ViewModels
         private List<string> GetSchoolsList()
         {
             var names = new List<string> { };
-            if (schoolRoot is null)
-            {
-                return names;
-            }
-            schoolRoot.Schools.ForEach(item => { names.Add(item.Name); });
+            schoolRoot?.Schools?.ForEach(item => { names.Add(item.Name); });
             return names;
         }
         /// <summary>
@@ -214,11 +208,7 @@ namespace StudentManager.ViewModels
         private List<string> GetMajorsList()
         {
             var majors = new List<string> { };
-            if (selectedSchoolObj is null)
-            {
-                return majors;
-            }
-            SelectedSchoolObj.Majors.ForEach(item => { majors.Add(item.Name); });
+            SelectedSchoolObj?.Majors?.ForEach(item => { majors.Add(item.Name); });
             return majors;
         }
         /// <summary>
@@ -228,11 +218,7 @@ namespace StudentManager.ViewModels
         private List<string> GetClassesList()
         {
             var classes = new List<string> { };
-            if (SelectedMajorObj is null)
-            {
-                return classes;
-            }
-            SelectedMajorObj.Classes.ForEach(item => classes.Add(item.Name));
+            SelectedMajorObj?.Classes?.ForEach(item => classes.Add(item.Name));
             return classes;
         }
         /// <summary>
@@ -242,11 +228,7 @@ namespace StudentManager.ViewModels
         private List<string> GetStudentsList()
         {
             var students = new List<string> { };
-            if (selectedClassObj.Students is null)
-            {
-                return students;
-            }
-            selectedClassObj.Students.ForEach(item => students.Add(item.Name));
+            selectedClassObj?.Students?.ForEach(item => students.Add(item.Name));
             return students;
         }
 
@@ -297,7 +279,7 @@ namespace StudentManager.ViewModels
         public void LoadDataGrid(string selectedStudent)
         {
             SelectedStudent = selectedStudent;
-            if (SelectedStudentObj is null)
+            if (SelectedStudentObj.Courses is null)
             {
                 DataGridSource = new ObservableCollection<CoursesItem> { };
                 return;
@@ -321,22 +303,52 @@ namespace StudentManager.ViewModels
             js.UpdateGrade(ls, studentID);
         }
 
-        public void RefreshComboBox()
+        public void RefreshSelectionBox()
         {
             schoolRoot = js.SchoolLoad();
+            if (SelectedSchool != null) { SelectedSchool = SelectedSchool; }
+            if (SelectedMajor != null) { SelectedMajor = SelectedMajor; }
+            if (SelectedClass != null) { SelectedClass = SelectedClass; }
         }
+
         public void AddComboBoxSchool()
         {
-            MessageBoxAddItems msgBox = new MessageBoxAddItems();
+            MsgBoxAddItems msgBox = new MsgBoxAddItems
+            {
+                ApplyObj = "School"
+            };
             msgBox.ShowDialog();
         }
         public void AddComboBoxMajor()
         {
-            throw new NotImplementedException();
+            MsgBoxAddItems msgBox = new MsgBoxAddItems
+            {
+                ApplyObj = "Major",
+                SelectedSchool = SelectedSchool
+            };
+            msgBox.ShowDialog();
         }
         public void AddComboBoxClass()
         {
-            throw new NotImplementedException();
+            MsgBoxAddItems msgBox = new MsgBoxAddItems
+            {
+                ApplyObj = "Class",
+                SelectedSchool = SelectedSchool,
+                SelectedMajor = SelectedMajor
+            };
+            msgBox.ShowDialog();
+        }
+
+        public void AddListBoxStudent()
+        {
+            if (SelectedClassObj == null) { SelectedClassObj = new ClassesItem { }; }
+            MsgBoxAddStudent msgBox = new MsgBoxAddStudent
+            {
+                SelectedSchool = SelectedSchool,
+                SelectedMajor = SelectedMajor,
+                SelectedClass = SelectedClass
+            };
+            msgBox.ShowDialog();
         }
     }
 }

@@ -6,9 +6,9 @@ using StudentManager.Models;
 
 namespace StudentManager.ViewModels
 {
-    class MessageBoxAddItemsViewModel
+    class MsgBoxAddItemsViewModel
     {
-        public MessageBoxAddItemsViewModel()
+        public MsgBoxAddItemsViewModel()
         {
             ItemsControlSource = new ObservableCollection<AddItemModel> { new AddItemModel { AddedItem = "" } };
         }

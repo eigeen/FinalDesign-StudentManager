@@ -17,14 +17,14 @@ namespace StudentManager.Views
     /// <summary>
     /// MessageBoxAddItems.xaml 的交互逻辑
     /// </summary>
-    public partial class MessageBoxAddItems : Window
+    public partial class MsgBoxAddItems : Window
     {
-        public MessageBoxAddItems()
+        public MsgBoxAddItems()
         {
             InitializeComponent();
-            viewModelObj = new MessageBoxAddItemsViewModel();
+            viewModelObj = new MsgBoxAddItemsViewModel();
             this.DataContext = viewModelObj;
-            
+
 
             js = new JsonAccess
             {
@@ -32,8 +32,12 @@ namespace StudentManager.Views
             };
         }
 
-        private MessageBoxAddItemsViewModel viewModelObj;
+        private MsgBoxAddItemsViewModel viewModelObj;
         private JsonAccess js;
+        public string ApplyObj { get; set; }
+        public string SelectedSchool { get; set; }
+        public string SelectedMajor { get; set; }
+        public string SelectedClass { get; set; }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -44,11 +48,11 @@ namespace StudentManager.Views
         private void BtnApply_Click(object sender, RoutedEventArgs e)
         {
             var ls = viewModelObj.GetApplyData();
-            js.UpdateSchoolRoot(ls, "School");
+            js.UpdateSchoolRoot(ls, ApplyObj, SelectedSchool, SelectedMajor, SelectedClass);
             Close();
         }
 
-        private void BtnCancle_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
