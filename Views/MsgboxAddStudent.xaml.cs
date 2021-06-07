@@ -1,16 +1,7 @@
 ﻿using StudentManager.Access;
 using StudentManager.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace StudentManager.Views
 {
@@ -23,7 +14,7 @@ namespace StudentManager.Views
         {
             InitializeComponent();
             viewModelObj = new MsgBoxAddStudentViewModel();
-            this.DataContext = viewModelObj;
+            DataContext = viewModelObj;
 
             js = new JsonAccess
             {
@@ -42,15 +33,15 @@ namespace StudentManager.Views
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
         private void BtnApply_Click(object sender, RoutedEventArgs e)
         {
-            var ls = viewModelObj.GetApplyData();
+            List<Models.AddStudentModel> ls = viewModelObj.GetApplyData();
             js.UpdateGradeRoot(ls);
 
-            var strls = new List<string> { };
+            List<string> strls = new List<string> { };
             ls.ForEach(item => strls.Add(item.StuName));
             js.UpdateSchoolRoot(strls, "Student", SelectedSchool, SelectedMajor, SelectedClass);
             Close();

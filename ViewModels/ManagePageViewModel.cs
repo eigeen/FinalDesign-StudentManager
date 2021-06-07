@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Text;
-using System.Windows.Controls;
 using StudentManager.Access;
 using StudentManager.Models;
 using StudentManager.Views;
 
 namespace StudentManager.ViewModels
 {
-    class ManagePageViewModel : INotifyPropertyChanged
+    public class ManagePageViewModel : INotifyPropertyChanged
     {
 
         /// <summary>
@@ -18,6 +15,7 @@ namespace StudentManager.ViewModels
         /// </summary>
         public ManagePageViewModel()
         {
+            //js.InitDB();
             js.SchoolPath = "_SchoolData.json";
             js.GradePath = "_GradeData.json";
             schoolRoot = js.SchoolLoad();
@@ -170,8 +168,8 @@ namespace StudentManager.ViewModels
             set
             {
                 selectedStudent = value;
-                var stu = selectedClassObj.Students.Find(e => e.Name == selectedStudent);
-                selectedStudentObj = gradeRoot.Grades.Find(e => e.ID == stu.ID);
+                StudentsItem stu = selectedClassObj.Students.Find(e => e.Name == selectedStudent);
+                selectedStudentObj = gradeRoot.Grades.Find(e => e.Name == stu.Name);
                 if (selectedStudentObj == null) { SelectedStudentObj = new GradesItem { }; }
             }
         }
@@ -197,7 +195,7 @@ namespace StudentManager.ViewModels
         /// <returns></returns>
         private List<string> GetSchoolsList()
         {
-            var names = new List<string> { };
+            List<string> names = new List<string> { };
             schoolRoot?.Schools?.ForEach(item => { names.Add(item.Name); });
             return names;
         }
@@ -207,7 +205,7 @@ namespace StudentManager.ViewModels
         /// <returns></returns>
         private List<string> GetMajorsList()
         {
-            var majors = new List<string> { };
+            List<string> majors = new List<string> { };
             SelectedSchoolObj?.Majors?.ForEach(item => { majors.Add(item.Name); });
             return majors;
         }
@@ -217,7 +215,7 @@ namespace StudentManager.ViewModels
         /// <returns></returns>
         private List<string> GetClassesList()
         {
-            var classes = new List<string> { };
+            List<string> classes = new List<string> { };
             SelectedMajorObj?.Classes?.ForEach(item => classes.Add(item.Name));
             return classes;
         }
@@ -227,7 +225,7 @@ namespace StudentManager.ViewModels
         /// <returns></returns>
         private List<string> GetStudentsList()
         {
-            var students = new List<string> { };
+            List<string> students = new List<string> { };
             selectedClassObj?.Students?.ForEach(item => students.Add(item.Name));
             return students;
         }
@@ -237,7 +235,7 @@ namespace StudentManager.ViewModels
         /// </summary>
         public void LoadComboBoxSchool()
         {
-            var schoolsList = GetSchoolsList();
+            List<string> schoolsList = GetSchoolsList();
             ComboSchools = new ObservableCollection<ComboBoxElement> { };
             schoolsList.ForEach(item => { ComboSchools.Add(new ComboBoxElement { Text = item }); });
             ComboSchools.Add(new ComboBoxElement { Text = "--添加--" });
@@ -248,7 +246,7 @@ namespace StudentManager.ViewModels
         /// </summary>
         public void LoadComboBoxMajor()
         {
-            var majorsList = GetMajorsList();
+            List<string> majorsList = GetMajorsList();
             ComboMajors = new ObservableCollection<ComboBoxElement> { };
             majorsList.ForEach(item => { ComboMajors.Add(new ComboBoxElement { Text = item }); });
             ComboMajors.Add(new ComboBoxElement { Text = "--添加--" });
@@ -258,7 +256,7 @@ namespace StudentManager.ViewModels
         /// </summary>
         public void LoadComboBoxClass()
         {
-            var classesList = GetClassesList();
+            List<string> classesList = GetClassesList();
             ComboClasses = new ObservableCollection<ComboBoxElement> { };
             classesList.ForEach(item => { ComboClasses.Add(new ComboBoxElement { Text = item }); });
             ComboClasses.Add(new ComboBoxElement { Text = "--添加--" });
@@ -268,7 +266,7 @@ namespace StudentManager.ViewModels
         /// </summary>
         public void LoadListBoxStudent()
         {
-            var studentList = GetStudentsList();
+            List<string> studentList = GetStudentsList();
             ListBoxStudents = new ObservableCollection<ListBoxElement> { };
             studentList.ForEach(item => { ListBoxStudents.Add(new ListBoxElement { Text = item }); });
         }
@@ -285,7 +283,7 @@ namespace StudentManager.ViewModels
                 return;
             }
             DataGridSource = new ObservableCollection<CoursesItem> { };
-            var studentID = SelectedStudentObj.ID;
+            string studentID = SelectedStudentObj.ID;
             gradeRoot.Grades.Find(e => e.ID == studentID).Courses.ForEach(item => { DataGridSource.Add(item); });
         }
         /// <summary>
@@ -294,12 +292,12 @@ namespace StudentManager.ViewModels
         /// <param name="coursesItems"></param>
         public void UpdateData(ObservableCollection<CoursesItem> coursesItems)
         {
-            var ls = new List<CoursesItem> { };
-            foreach (var item in coursesItems)
+            List<CoursesItem> ls = new List<CoursesItem> { };
+            foreach (CoursesItem item in coursesItems)
             {
                 ls.Add(item);
             }
-            var studentID = SelectedStudentObj.ID;
+            string studentID = SelectedStudentObj.ID;
             js.UpdateGrade(ls, studentID);
         }
 

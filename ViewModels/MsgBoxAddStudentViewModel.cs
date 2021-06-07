@@ -1,24 +1,21 @@
 ﻿using StudentManager.Models;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Windows;
 
 namespace StudentManager.ViewModels
 {
-    class MsgBoxAddStudentViewModel
+    public class MsgBoxAddStudentViewModel
     {
         public MsgBoxAddStudentViewModel()
         {
-            ItemsControlSource = new ObservableCollection<AddStudentModel> { new AddStudentModel { } };
+            ItemsControlSource = new ObservableCollection<AddStudentModel> { new AddStudentModel { StuID = "000", StuName = "姓名", StuSex = "男", StuAge = 19, StuDesc = "描述" } };
         }
         public ObservableCollection<AddStudentModel> ItemsControlSource { get; set; }
 
         public List<AddStudentModel> GetApplyData()
         {
-            var ls = new List<AddStudentModel> { };
-            foreach (var item in ItemsControlSource)
+            List<AddStudentModel> ls = new List<AddStudentModel> { };
+            foreach (AddStudentModel item in ItemsControlSource)
             {
                 ls.Add(item);
             }

@@ -28,6 +28,7 @@ namespace StudentManager.Access
             }
         }
 
+
         private string gradePath;
 
         public string GradePath
@@ -41,6 +42,20 @@ namespace StudentManager.Access
                     var t = File.Create(GradePath);
                     t.Close();
                 }
+            }
+        }
+
+        public void InitDB()
+        {
+            if (!File.Exists(SchoolPath))
+            {
+                using StreamWriter sw = new StreamWriter("_SchoolData.json");
+                sw.Write("{\"Version\":\"1.0.0\",\"DataVersion\":1,\"Schools\":[]}");
+            }           
+            if (!File.Exists(GradePath))
+            {
+                using StreamWriter sw = new StreamWriter("_GradeData.json");
+                sw.Write("{\"Version\":\"1.0.0\",\"DataVersion\":1,\"Grades\":[]}");
             }
         }
 
@@ -93,7 +108,7 @@ namespace StudentManager.Access
         /// <param name="className"></param>
         public void UpdateSchoolRoot(List<string> ls, string target, string school, string major, string className)
         {
-            var schoolRoot = this.SchoolLoad();
+            SchoolRoot schoolRoot = this.SchoolLoad();
             if (target == "School")
             {
                 ls.ForEach(e => schoolRoot.Schools.Add(
@@ -127,11 +142,9 @@ namespace StudentManager.Access
                     ));
             }
 
-            var str = JsonConvert.SerializeObject(schoolRoot);
-            using (StreamWriter sw = new StreamWriter(schoolPath))
-            {
-                sw.Write(str);
-            }
+            string str = JsonConvert.SerializeObject(schoolRoot);
+            using StreamWriter sw = new StreamWriter(schoolPath);
+            sw.Write(str);
         }
         /// <summary>
         /// 更新GradeRoot
@@ -139,19 +152,17 @@ namespace StudentManager.Access
         /// <param name="ls"></param>
         public void UpdateGradeRoot(List<AddStudentModel> ls)
         {
-            var gradeRoot = this.GradeLoad();
-            var newls = new List<GradesItem> { };
-            foreach (var item in ls)
+            GradeRoot gradeRoot = GradeLoad();
+            List<GradesItem> newls = new List<GradesItem> { };
+            foreach (AddStudentModel item in ls)
             {
                 newls.Add(new GradesItem { Name = item.StuName, ID = item.StuID, Courses = new List<CoursesItem> { } }); ;
             }
             newls.ForEach(item => gradeRoot.Grades.Add(item));
 
-            var str = JsonConvert.SerializeObject(gradeRoot);
-            using (StreamWriter sw = new StreamWriter(gradePath))
-            {
-                sw.Write(str);
-            }
+            string str = JsonConvert.SerializeObject(gradeRoot);
+            using StreamWriter sw = new StreamWriter(gradePath);
+            sw.Write(str);
         }
     }
 

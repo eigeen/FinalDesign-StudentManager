@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StudentManager.Models
+﻿namespace StudentManager.Models
 {
     public class AddStudentModel
     {
@@ -17,7 +13,7 @@ namespace StudentManager.Models
         /// <summary>
         /// 
         /// </summary>
-        public int StuSex { get; set; }
+        public string StuSex { get; set; }
         /// <summary>
         /// 
         /// </summary>
