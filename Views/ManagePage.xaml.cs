@@ -40,7 +40,7 @@ namespace StudentManager.Views
         {
             InitializeComponent();
             managePageObj = new ManagePageViewModel();
-            this.DataContext = managePageObj;
+            DataContext = managePageObj;
 
         }
 

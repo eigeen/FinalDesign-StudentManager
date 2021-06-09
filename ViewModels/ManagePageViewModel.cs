@@ -36,7 +36,7 @@ namespace StudentManager.ViewModels
 
         public ObservableCollection<CoursesItem> DataGridSource
         {
-            get { return dataGridSource; }
+            get => dataGridSource;
             set
             {
                 dataGridSource = value;
@@ -48,7 +48,7 @@ namespace StudentManager.ViewModels
 
         public ObservableCollection<ComboBoxElement> ComboSchools
         {
-            get { return comboSchools; }
+            get => comboSchools;
             set
             {
                 comboSchools = value;
@@ -60,7 +60,7 @@ namespace StudentManager.ViewModels
 
         public ObservableCollection<ComboBoxElement> ComboMajors
         {
-            get { return comboMajors; }
+            get => comboMajors;
             set
             {
                 comboMajors = value;
@@ -72,7 +72,7 @@ namespace StudentManager.ViewModels
 
         public ObservableCollection<ComboBoxElement> ComboClasses
         {
-            get { return comboClasses; }
+            get => comboClasses;
             set
             {
                 comboClasses = value;
@@ -85,7 +85,7 @@ namespace StudentManager.ViewModels
 
         public string SelectedSchool
         {
-            get { return selectedSchool; }
+            get => selectedSchool;
             set
             {
                 selectedSchool = value;
@@ -97,7 +97,7 @@ namespace StudentManager.ViewModels
 
         public string SelectedMajor
         {
-            get { return selectedMajor; }
+            get => selectedMajor;
             set
             {
                 selectedMajor = value;

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StudentManager.Models;
-using StudentManager.Views;
 
 namespace StudentManager.Access
 {
@@ -15,7 +12,7 @@ namespace StudentManager.Access
 
         public string SchoolPath
         {
-            get { return schoolPath; }
+            get => schoolPath;
             set
             {
                 schoolPath = value;
@@ -33,7 +30,7 @@ namespace StudentManager.Access
 
         public string GradePath
         {
-            get { return gradePath; }
+            get => gradePath;
             set
             {
                 gradePath = value;
@@ -90,7 +87,7 @@ namespace StudentManager.Access
 
         public void UpdateGrade(List<CoursesItem> coursesItems, string stuID)
         {
-            var gradeRoot = GradeLoad();
+            GradeRoot gradeRoot = GradeLoad();
             gradeRoot.Grades.Find(e => e.ID == stuID).Courses = coursesItems;
             var str = JsonConvert.SerializeObject(gradeRoot);
             using (StreamWriter sw = new StreamWriter(gradePath))
@@ -108,7 +105,7 @@ namespace StudentManager.Access
         /// <param name="className"></param>
         public void UpdateSchoolRoot(List<string> ls, string target, string school, string major, string className)
         {
-            SchoolRoot schoolRoot = this.SchoolLoad();
+            SchoolRoot schoolRoot = SchoolLoad();
             if (target == "School")
             {
                 ls.ForEach(e => schoolRoot.Schools.Add(

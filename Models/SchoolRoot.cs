@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace StudentManager.Models
 {
@@ -35,11 +33,11 @@ namespace StudentManager.Models
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 
+        /// 班级学生数量
         /// </summary>
         public int StudentCount { get; set; }
         /// <summary>
-        /// 
+        /// 学生
         /// </summary>
         public List<StudentsItem> Students { get; set; }
     }
@@ -51,19 +49,19 @@ namespace StudentManager.Models
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 
+        /// 专业ID
         /// </summary>
         public string ID { get; set; }
         /// <summary>
-        /// 
+        /// 标签
         /// </summary>
         public string Tag { get; set; }
         /// <summary>
-        /// 
+        /// 描述
         /// </summary>
         public string Desc { get; set; }
         /// <summary>
-        /// 
+        /// 班级
         /// </summary>
         public List<ClassesItem> Classes { get; set; }
     }
@@ -75,15 +73,15 @@ namespace StudentManager.Models
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 
+        /// 学院ID
         /// </summary>
         public string ID { get; set; }
         /// <summary>
-        /// 
+        /// 标签
         /// </summary>
         public string Tag { get; set; }
         /// <summary>
-        /// 
+        /// 专业
         /// </summary>
         public List<MajorsItem> Majors { get; set; }
     }
