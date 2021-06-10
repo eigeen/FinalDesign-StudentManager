@@ -51,8 +51,8 @@
                       SelectedIndex="{Binding DataGridSelectedIdx}"
                       RowEditEnding="TableDataGrid_RowEditEnding">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Name}" Width="100" Header="课程"/>
-                    <DataGridTextColumn Binding="{Binding ID}" Width="100" Header="课程ID"/>
+                    <DataGridTextColumn Binding="{Binding Subject}" Width="100" Header="课程"/>
+                    <DataGridTextColumn Binding="{Binding SID}" Width="100" Header="课程ID"/>
                     <DataGridTextColumn Binding="{Binding Credit}" Width="100" Header="学分"/>
                     <DataGridTextColumn Binding="{Binding Score}" Width="100" Header="分数"/>
                     <DataGridTextColumn Binding="{Binding GPA}" Width="100" Header="绩点"/>
@@ -151,7 +151,7 @@
                          BorderThickness="1" 
                          MinHeight="80"
                          MaxHeight="250"
-                         DisplayMemberPath="Text"
+                         DisplayMemberPath="Name"
                          ItemsSource="{Binding ListBoxStudents,Mode=TwoWay}"
                          SelectionChanged="lbStudent_SelectionChanged">
                 </ListBox>

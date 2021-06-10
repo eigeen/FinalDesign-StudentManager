@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:StudentManager.Views"
         xmlns:ui="http://schemas.modernwpf.com/2019" xmlns:viewmodels="clr-namespace:StudentManager.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MsgBoxAddItemsViewModel}"
         mc:Ignorable="d"
-        Title="MessageBoxAddItems" MinHeight="180" Height="200" MaxWidth="240"
+        Title="添加" Height="300" Width="500"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -14,19 +14,26 @@
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0" Margin="20">
-            <ItemsControl x:Name="ItemsControlText"
-                      ItemsSource="{Binding ItemsControlSource}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox Text="{Binding AddedItem}" Width="140" Margin="0 0 10 0"/>
-                            <Button Content="" Click="BtnDelRow_Click" Width="30" Height="30"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <DataGrid x:Name="StuDataGrid"
+                      Margin="10,10"
+                      Grid.Row="0"
+                      CanUserResizeRows="True"
+                      AutoGenerateColumns="False"
+                      CanUserSortColumns="False"
+                      CanUserAddRows="True"
+                      SelectedIndex="{Binding DataGridSelectedIdx}"
+                      ItemsSource="{Binding DataGridSource,Mode=OneWay}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Width="140" Binding="{Binding ID}"/>
+                <DataGridTextColumn Header="名称" Width="140" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="属于（上级ID）" Width="140" Binding="{Binding BelongTo}"/>
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="MenuItemDel" Header="删除选中行" IsEnabled="False" Click="MenuItemDel_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="15">
             <Button x:Name="BtnApply" Content="添加" Width="60" Click="BtnApply_Click" Margin="0 0 60 0"/>

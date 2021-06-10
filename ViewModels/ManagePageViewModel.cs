@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using StudentManager.Access;
@@ -15,24 +16,25 @@ namespace StudentManager.ViewModels
         /// </summary>
         public ManagePageViewModel()
         {
-            SqliteAccess db = new SqliteAccess();
             db.Connect("data.db");
 
             LoadComboBoxSchool();
-            DataGridSource = new ObservableCollection<CoursesItem> { };
+            DataGridSource = new ObservableCollection<GradeObject> { };
 
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            System.Environment.Exit(0);
+            Environment.Exit(0);
         }
+
+        private readonly SqliteAccess db = new SqliteAccess();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private ObservableCollection<CoursesItem> dataGridSource;
+        private ObservableCollection<GradeObject> dataGridSource;
 
-        public ObservableCollection<CoursesItem> DataGridSource
+        public ObservableCollection<GradeObject> DataGridSource
         {
             get => dataGridSource;
             set
@@ -77,163 +79,65 @@ namespace StudentManager.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ComboClasses"));
             }
         }
-
-
-        private string selectedSchool;
-
-        public string SelectedSchool
-        {
-            get => selectedSchool;
-            set
-            {
-                selectedSchool = value;
-                SelectedSchoolObj = schoolRoot.Schools.Find(e => e.Name == selectedSchool);
-            }
-        }
-
-        private string selectedMajor;
-
-        public string SelectedMajor
-        {
-            get => selectedMajor;
-            set
-            {
-                selectedMajor = value;
-                SelectedMajorObj = SelectedSchoolObj.Majors.Find(e => e.Name == selectedMajor);
-            }
-        }
-
-
-
-        private string selectedClass;
-
-        public string SelectedClass
-        {
-            get { return selectedClass; }
-            set
-            {
-                selectedClass = value;
-                SelectedClassObj = SelectedMajorObj.Classes.Find(e => e.Name == selectedClass);
-            }
-        }
-
-        private SchoolsItem selectedSchoolObj;
-
-        public SchoolsItem SelectedSchoolObj
-        {
-            get { return selectedSchoolObj; }
-            set
-            {
-                selectedSchoolObj = value;
-            }
-        }
-
-        private MajorsItem selectedMajorObj;
-
-        public MajorsItem SelectedMajorObj
-        {
-            get { return selectedMajorObj; }
-            set { selectedMajorObj = value; }
-        }
-
-        private ClassesItem selectedClassObj;
-
-        public ClassesItem SelectedClassObj
-        {
-            get { return selectedClassObj; }
-            set { selectedClassObj = value; }
-        }
-
-        private ObservableCollection<ListBoxElement> listBoxStudent;
-
-
+        private ObservableCollection<ListBoxElement> listBoxStudents;
 
         public ObservableCollection<ListBoxElement> ListBoxStudents
         {
-            get { return listBoxStudent; }
+            get => listBoxStudents;
             set
             {
-                listBoxStudent = value;
+                listBoxStudents = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ListBoxStudents"));
             }
         }
 
-        private string selectedStudent;
+        public string SelectedSchool { get; set; }
+        public string SelectedMajor { get; set; }
+        public string SelectedClass { get; set; }
 
-        public string SelectedStudent
+        private string selectedStuID;
+        public string SelectedStuID
         {
-            get { return selectedStudent; }
+            get => selectedStuID;
             set
             {
-                selectedStudent = value;
-                StudentsItem stu = selectedClassObj.Students.Find(e => e.Name == selectedStudent);
-                selectedStudentObj = gradeRoot.Grades.Find(e => e.Name == stu.Name);
-                if (selectedStudentObj == null) { SelectedStudentObj = new GradesItem { }; }
+                selectedStuID = value;
+                SelectedStuData = db.FetchOneStudentData(selectedStuID);
             }
         }
 
-        private GradesItem selectedStudentObj;
-
-        public GradesItem SelectedStudentObj
-        {
-            get { return selectedStudentObj; }
-            set { selectedStudentObj = value; }
-        }
-
-        private JsonAccess js = new JsonAccess();
-        private SchoolRoot schoolRoot;
-        private GradeRoot gradeRoot;
+        public StudentObject SelectedStuData { get; set; }
 
 
         public int DataGridSelectedIdx { get; set; }
+
         /// <summary>
-        /// 获取学院列表
+        /// 获取学院/专业/班级列表
         /// </summary>
         /// <param name="root"></param>
         /// <returns></returns>
-        private List<string> GetSchoolsList()
+        private List<string> GetSMCList(SMC smcTarget)
         {
-            List<string> names = new List<string> { };
-            schoolRoot?.Schools?.ForEach(item => { names.Add(item.Name); });
-            return names;
-        }
-        /// <summary>
-        /// 获取学院-学科列表
-        /// </summary>
-        /// <returns></returns>
-        private List<string> GetMajorsList()
-        {
-            List<string> majors = new List<string> { };
-            SelectedSchoolObj?.Majors?.ForEach(item => { majors.Add(item.Name); });
-            return majors;
-        }
-        /// <summary>
-        /// 获取学科-班级列表
-        /// </summary>
-        /// <returns></returns>
-        private List<string> GetClassesList()
-        {
-            List<string> classes = new List<string> { };
-            SelectedMajorObj?.Classes?.ForEach(item => classes.Add(item.Name));
-            return classes;
+            List<SMCObject> source = db.FetchSMC(smcTarget);
+            List<string> ls = new List<string> { };
+            source.ForEach(item => ls.Add(item.Name));
+            return ls;
         }
         /// <summary>
         /// 获得班级-学生列表
         /// </summary>
         /// <returns></returns>
-        private List<string> GetStudentsList()
+        private List<StudentObject> GetStudentsList()
         {
-            List<string> students = new List<string> { };
-            selectedClassObj?.Students?.ForEach(item => students.Add(item.Name));
-            return students;
+            List<StudentObject> ls = db.FetchStudents();
+            return ls;
         }
-
         /// <summary>
         /// 载入学院列表
         /// </summary>
         public void LoadComboBoxSchool()
         {
-            List<string> schoolsList = GetSchoolsList();
+            List<string> schoolsList = GetSMCList(SMC.Schools);
             ComboSchools = new ObservableCollection<ComboBoxElement> { };
             schoolsList.ForEach(item => { ComboSchools.Add(new ComboBoxElement { Text = item }); });
             ComboSchools.Add(new ComboBoxElement { Text = "--添加--" });
@@ -244,7 +148,7 @@ namespace StudentManager.ViewModels
         /// </summary>
         public void LoadComboBoxMajor()
         {
-            List<string> majorsList = GetMajorsList();
+            List<string> majorsList = GetSMCList(SMC.Majors);
             ComboMajors = new ObservableCollection<ComboBoxElement> { };
             majorsList.ForEach(item => { ComboMajors.Add(new ComboBoxElement { Text = item }); });
             ComboMajors.Add(new ComboBoxElement { Text = "--添加--" });
@@ -254,7 +158,7 @@ namespace StudentManager.ViewModels
         /// </summary>
         public void LoadComboBoxClass()
         {
-            List<string> classesList = GetClassesList();
+            List<string> classesList = GetSMCList(SMC.Classes);
             ComboClasses = new ObservableCollection<ComboBoxElement> { };
             classesList.ForEach(item => { ComboClasses.Add(new ComboBoxElement { Text = item }); });
             ComboClasses.Add(new ComboBoxElement { Text = "--添加--" });
@@ -264,44 +168,38 @@ namespace StudentManager.ViewModels
         /// </summary>
         public void LoadListBoxStudent()
         {
-            List<string> studentList = GetStudentsList();
+            List<StudentObject> ls = GetStudentsList();
             ListBoxStudents = new ObservableCollection<ListBoxElement> { };
-            studentList.ForEach(item => { ListBoxStudents.Add(new ListBoxElement { Text = item }); });
+            ls.ForEach(item => { ListBoxStudents.Add(new ListBoxElement { Name = item.Name, ID = item.UID }); });
         }
         /// <summary>
         /// 载入学生所有成绩
         /// </summary>
         /// <param name="selectedStudent"></param>
-        public void LoadDataGrid(string selectedStudent)
+        public void LoadDataGrid(string id)
         {
-            SelectedStudent = selectedStudent;
-            if (SelectedStudentObj.Courses is null)
-            {
-                DataGridSource = new ObservableCollection<CoursesItem> { };
-                return;
-            }
-            DataGridSource = new ObservableCollection<CoursesItem> { };
-            string studentID = SelectedStudentObj.ID;
-            gradeRoot.Grades.Find(e => e.ID == studentID).Courses.ForEach(item => { DataGridSource.Add(item); });
+            SelectedStuID = id;
+            List<GradeObject> ls = db.FetchGrades(SelectedStuID);
+            DataGridSource = new ObservableCollection<GradeObject> { };
+            ls.ForEach(item => DataGridSource.Add(item));
         }
         /// <summary>
         /// 应用表格内的修改到文件
         /// </summary>
         /// <param name="coursesItems"></param>
-        public void UpdateData(ObservableCollection<CoursesItem> coursesItems)
+        public void UpdateData(ObservableCollection<GradeObject> coursesItems)
         {
-            List<CoursesItem> ls = new List<CoursesItem> { };
-            foreach (CoursesItem item in coursesItems)
+            List<GradeObject> ls = new List<GradeObject> { };
+            foreach (GradeObject item in coursesItems)
             {
                 ls.Add(item);
             }
-            string studentID = SelectedStudentObj.ID;
-            js.UpdateGrade(ls, studentID);
+            db.UpdateGrades(ls, SelectedStuID);
         }
 
         public void RefreshSelectionBox()
         {
-            schoolRoot = js.SchoolLoad();
+            //schoolRoot = js.SchoolLoad();
             if (SelectedSchool != null) { SelectedSchool = SelectedSchool; }
             if (SelectedMajor != null) { SelectedMajor = SelectedMajor; }
             if (SelectedClass != null) { SelectedClass = SelectedClass; }
@@ -311,7 +209,7 @@ namespace StudentManager.ViewModels
         {
             MsgBoxAddItems msgBox = new MsgBoxAddItems
             {
-                ApplyObj = "School"
+                ApplyObj = "Schools"
             };
             msgBox.ShowDialog();
         }
@@ -319,7 +217,7 @@ namespace StudentManager.ViewModels
         {
             MsgBoxAddItems msgBox = new MsgBoxAddItems
             {
-                ApplyObj = "Major",
+                ApplyObj = "Majors",
                 SelectedSchool = SelectedSchool
             };
             msgBox.ShowDialog();
@@ -328,7 +226,7 @@ namespace StudentManager.ViewModels
         {
             MsgBoxAddItems msgBox = new MsgBoxAddItems
             {
-                ApplyObj = "Class",
+                ApplyObj = "Classes",
                 SelectedSchool = SelectedSchool,
                 SelectedMajor = SelectedMajor
             };
@@ -337,7 +235,7 @@ namespace StudentManager.ViewModels
 
         public void AddListBoxStudent()
         {
-            if (SelectedClassObj == null) { SelectedClassObj = new ClassesItem { }; }
+            //if (SelectedClassObj == null) { SelectedClassObj = new ClassesItem { }; }
             MsgBoxAddStudent msgBox = new MsgBoxAddStudent
             {
                 SelectedSchool = SelectedSchool,
@@ -346,6 +244,7 @@ namespace StudentManager.ViewModels
             };
             msgBox.ShowDialog();
         }
+
     }
 }
 

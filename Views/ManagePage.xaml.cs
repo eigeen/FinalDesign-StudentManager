@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using ModernWpf.Controls;
@@ -86,6 +87,7 @@ namespace StudentManager.Views
                 cbMajor.SelectedIndex = -1;
                 cbClass.SelectedIndex = -1;
                 lbStudent.SelectedIndex = -1;
+                lbStudent.ItemsSource = new Dictionary<string, string> { };
                 managePageObj.SelectedSchool = (sender as ComboBox).SelectedValue.ToString();
                 managePageObj.LoadComboBoxMajor();
             }
@@ -105,6 +107,7 @@ namespace StudentManager.Views
                 }
                 cbClass.SelectedIndex = -1;
                 lbStudent.SelectedIndex = -1;
+                lbStudent.ItemsSource = new Dictionary<string, string> { };
                 managePageObj.SelectedMajor = (sender as ComboBox).SelectedValue.ToString();
                 managePageObj.LoadComboBoxClass();
             }
@@ -122,7 +125,7 @@ namespace StudentManager.Views
                     managePageObj.LoadComboBoxClass();
                     return;
                 }
-                lbStudent.SelectedIndex = -1;
+                lbStudent.ItemsSource = new Dictionary<string, string> { };
                 managePageObj.SelectedClass = (sender as ComboBox).SelectedValue.ToString();
                 managePageObj.LoadListBoxStudent();
             }
@@ -134,8 +137,8 @@ namespace StudentManager.Views
             if ((sender as ListBox).SelectedIndex != -1)
             {
                 ListBoxElement item = (ListBoxElement)(sender as ListBox).SelectedItem;
-                var selectedValue = item.Text;
-                managePageObj.LoadDataGrid(selectedValue);
+                string selectedID = item.ID;
+                managePageObj.LoadDataGrid(selectedID);
             }
         }
 

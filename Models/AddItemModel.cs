@@ -4,8 +4,9 @@ using System.Text;
 
 namespace StudentManager.Models
 {
-    class AddItemModel
+    public class AddItemModel
     {
-        public string AddedItem { get; set; }
+        public string UID { get; set; }
+        public string Name { get; set; }
     }
 }

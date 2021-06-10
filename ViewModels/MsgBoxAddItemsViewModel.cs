@@ -1,27 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+﻿using System.Collections.Generic;
+using StudentManager.Access;
 using StudentManager.Models;
 
 namespace StudentManager.ViewModels
 {
-    class MsgBoxAddItemsViewModel
+    public class MsgBoxAddItemsViewModel
     {
         public MsgBoxAddItemsViewModel()
         {
-            ItemsControlSource = new ObservableCollection<AddItemModel> { new AddItemModel { AddedItem = "" } };
-        }
-        public ObservableCollection<AddItemModel> ItemsControlSource { get; set; }
+            DataGridSource = new List<SMCObject> { };
 
-        public List<string> GetApplyData()
+        }
+
+        private readonly SqliteAccess db = new SqliteAccess();
+
+        public List<SMCObject> DataGridSource { get; set; }
+        public int DataGridSelectedIdx { get; set; }
+
+        //public List<StudentObject> GetApplyData()
+        //{
+        //    List<StudentObject> ls = new List<StudentObject> { };
+        //    foreach (StudentObject item in DataGridSource)
+        //    {
+        //        ls.Add(item);
+        //    }
+        //    return ls;
+        //}
+
+        public void Apply(string tbName)
         {
-            var ls = new List<string> { };
-            foreach (var item in ItemsControlSource)
+            foreach (SMCObject item in DataGridSource)
             {
-                ls.Add(item.AddedItem);
+                db.AddSMC(tbName, item);
             }
-            return ls;
         }
     }
 }

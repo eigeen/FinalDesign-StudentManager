@@ -15,16 +15,9 @@ namespace StudentManager.Views
             InitializeComponent();
             viewModelObj = new MsgBoxAddStudentViewModel();
             DataContext = viewModelObj;
-
-            js = new JsonAccess
-            {
-                SchoolPath = "_SchoolData.json",
-                GradePath = "_GradeData.json"
-            };
         }
 
         private MsgBoxAddStudentViewModel viewModelObj;
-        private JsonAccess js;
 
         public string SelectedSchool { get; set; }
         public string SelectedMajor { get; set; }
@@ -38,12 +31,8 @@ namespace StudentManager.Views
 
         private void BtnApply_Click(object sender, RoutedEventArgs e)
         {
-            List<Models.AddStudentModel> ls = viewModelObj.GetApplyData();
-            js.UpdateGradeRoot(ls);
-
-            List<string> strls = new List<string> { };
-            ls.ForEach(item => strls.Add(item.StuName));
-            js.UpdateSchoolRoot(strls, "Student", SelectedSchool, SelectedMajor, SelectedClass);
+            StuDataGrid.CanUserAddRows = false;
+            viewModelObj.Apply(SelectedClass);
             Close();
         }
 

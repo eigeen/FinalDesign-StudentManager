@@ -1,6 +1,6 @@
-﻿using StudentManager.Models;
+﻿using StudentManager.Access;
+using StudentManager.Models;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace StudentManager.ViewModels
 {
@@ -8,18 +8,19 @@ namespace StudentManager.ViewModels
     {
         public MsgBoxAddStudentViewModel()
         {
-            ItemsControlSource = new ObservableCollection<AddStudentModel> { new AddStudentModel { StuID = "000", StuName = "姓名", StuSex = "男", StuAge = 19, StuDesc = "描述" } };
+            DataGridSource = new List<StudentObject> { };
+            db = new SqliteAccess();
         }
-        public ObservableCollection<AddStudentModel> ItemsControlSource { get; set; }
+        public List<StudentObject> DataGridSource { get; set; }
+        private readonly SqliteAccess db;
 
-        public List<AddStudentModel> GetApplyData()
+        public void Apply(string className)
         {
-            List<AddStudentModel> ls = new List<AddStudentModel> { };
-            foreach (AddStudentModel item in ItemsControlSource)
+            foreach (StudentObject item in DataGridSource)
             {
-                ls.Add(item);
+                item.Class = db.FetchOneSMCbyName(SMC.Classes, className).ID;
+                db.AddStudent(item);
             }
-            return ls;
         }
     }
 }
