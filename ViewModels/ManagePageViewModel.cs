@@ -15,16 +15,14 @@ namespace StudentManager.ViewModels
         /// </summary>
         public ManagePageViewModel()
         {
-            //js.InitDB();
-            js.SchoolPath = "_SchoolData.json";
-            js.GradePath = "_GradeData.json";
-            schoolRoot = js.SchoolLoad();
-            gradeRoot = js.GradeLoad();
+            SqliteAccess db = new SqliteAccess();
+            db.Connect("data.db");
 
             LoadComboBoxSchool();
             DataGridSource = new ObservableCollection<CoursesItem> { };
 
         }
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             System.Environment.Exit(0);
