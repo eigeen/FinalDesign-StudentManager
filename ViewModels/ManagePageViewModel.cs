@@ -16,12 +16,14 @@ namespace StudentManager.ViewModels
         /// </summary>
         public ManagePageViewModel()
         {
-            db.Connect("data.db");
-
-            LoadComboBoxSchool();
-            DataGridSource = new ObservableCollection<GradeObject> { };
-
+            if (isFirstAccess)
+            {
+                Init();
+                isFirstAccess = false;
+            }
         }
+
+        private static bool isFirstAccess = true;
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
@@ -91,9 +93,9 @@ namespace StudentManager.ViewModels
             }
         }
 
-        public string SelectedSchool { get; set; }
-        public string SelectedMajor { get; set; }
-        public string SelectedClass { get; set; }
+        public string SelectedSchoolID { get; set; }
+        public string SelectedMajorID { get; set; }
+        public string SelectedClassID { get; set; }
 
         private string selectedStuID;
         public string SelectedStuID
@@ -108,20 +110,12 @@ namespace StudentManager.ViewModels
 
         public StudentObject SelectedStuData { get; set; }
 
-
         public int DataGridSelectedIdx { get; set; }
 
-        /// <summary>
-        /// 获取学院/专业/班级列表
-        /// </summary>
-        /// <param name="root"></param>
-        /// <returns></returns>
-        private List<string> GetSMCList(SMC smcTarget)
+        public void Init()
         {
-            List<SMCObject> source = db.FetchSMC(smcTarget);
-            List<string> ls = new List<string> { };
-            source.ForEach(item => ls.Add(item.Name));
-            return ls;
+            db.Connect("data.db");
+            LoadComboBoxSchool();
         }
         /// <summary>
         /// 获得班级-学生列表
@@ -137,10 +131,10 @@ namespace StudentManager.ViewModels
         /// </summary>
         public void LoadComboBoxSchool()
         {
-            List<string> schoolsList = GetSMCList(SMC.Schools);
+            List<SMCObject> source = db.FetchSMC(SMC.Schools);
             ComboSchools = new ObservableCollection<ComboBoxElement> { };
-            schoolsList.ForEach(item => { ComboSchools.Add(new ComboBoxElement { Text = item }); });
-            ComboSchools.Add(new ComboBoxElement { Text = "--添加--" });
+            source.ForEach(item => { ComboSchools.Add(new ComboBoxElement { Name = item.Name, ID = item.ID }); });
+            ComboSchools.Add(new ComboBoxElement { Name = "--添加--", ID = "ADD" });
 
         }
         /// <summary>
@@ -148,20 +142,20 @@ namespace StudentManager.ViewModels
         /// </summary>
         public void LoadComboBoxMajor()
         {
-            List<string> majorsList = GetSMCList(SMC.Majors);
+            List<SMCObject> source = db.FetchSMC(SMC.Majors);
             ComboMajors = new ObservableCollection<ComboBoxElement> { };
-            majorsList.ForEach(item => { ComboMajors.Add(new ComboBoxElement { Text = item }); });
-            ComboMajors.Add(new ComboBoxElement { Text = "--添加--" });
+            source.ForEach(item => { ComboMajors.Add(new ComboBoxElement { Name = item.Name, ID = item.ID }); });
+            ComboMajors.Add(new ComboBoxElement { Name = "--添加--" });
         }
         /// <summary>
         /// 载入班级列表
         /// </summary>
         public void LoadComboBoxClass()
         {
-            List<string> classesList = GetSMCList(SMC.Classes);
+            List<SMCObject> source = db.FetchSMC(SMC.Classes);
             ComboClasses = new ObservableCollection<ComboBoxElement> { };
-            classesList.ForEach(item => { ComboClasses.Add(new ComboBoxElement { Text = item }); });
-            ComboClasses.Add(new ComboBoxElement { Text = "--添加--" });
+            source.ForEach(item => { ComboClasses.Add(new ComboBoxElement { Name = item.Name, ID = item.ID }); });
+            ComboClasses.Add(new ComboBoxElement { Name = "--添加--" });
         }
         /// <summary>
         /// 载入学生列表
@@ -199,10 +193,9 @@ namespace StudentManager.ViewModels
 
         public void RefreshSelectionBox()
         {
-            //schoolRoot = js.SchoolLoad();
-            if (SelectedSchool != null) { SelectedSchool = SelectedSchool; }
-            if (SelectedMajor != null) { SelectedMajor = SelectedMajor; }
-            if (SelectedClass != null) { SelectedClass = SelectedClass; }
+            if (SelectedSchoolID != null) { SelectedSchoolID = SelectedSchoolID; }
+            if (SelectedMajorID != null) { SelectedMajorID = SelectedMajorID; }
+            if (SelectedClassID != null) { SelectedClassID = SelectedClassID; }
         }
 
         public void AddComboBoxSchool()
@@ -218,7 +211,7 @@ namespace StudentManager.ViewModels
             MsgBoxAddItems msgBox = new MsgBoxAddItems
             {
                 ApplyObj = "Majors",
-                SelectedSchool = SelectedSchool
+                SelectedSchool = SelectedSchoolID
             };
             msgBox.ShowDialog();
         }
@@ -227,8 +220,8 @@ namespace StudentManager.ViewModels
             MsgBoxAddItems msgBox = new MsgBoxAddItems
             {
                 ApplyObj = "Classes",
-                SelectedSchool = SelectedSchool,
-                SelectedMajor = SelectedMajor
+                SelectedSchool = SelectedSchoolID,
+                SelectedMajor = SelectedMajorID
             };
             msgBox.ShowDialog();
         }
@@ -238,9 +231,9 @@ namespace StudentManager.ViewModels
             //if (SelectedClassObj == null) { SelectedClassObj = new ClassesItem { }; }
             MsgBoxAddStudent msgBox = new MsgBoxAddStudent
             {
-                SelectedSchool = SelectedSchool,
-                SelectedMajor = SelectedMajor,
-                SelectedClass = SelectedClass
+                SelectedSchool = SelectedSchoolID,
+                SelectedMajor = SelectedMajorID,
+                SelectedClass = SelectedClassID
             };
             msgBox.ShowDialog();
         }

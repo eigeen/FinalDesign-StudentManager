@@ -14,7 +14,7 @@ namespace StudentManager.Views
     /// </summary>
     public partial class ManagePage
     {
-
+        private static int isFirstAccess = 0;
         private bool isEditMode;
 
         public bool IsEditMode
@@ -35,12 +35,12 @@ namespace StudentManager.Views
                 }
             }
         }
-        private ManagePageViewModel managePageObj;
+        private ManagePageViewModel managePageObj = new ManagePageViewModel();
 
         public ManagePage()
         {
             InitializeComponent();
-            managePageObj = new ManagePageViewModel();
+
             DataContext = managePageObj;
 
         }
@@ -76,7 +76,7 @@ namespace StudentManager.Views
         {
             if ((sender as ComboBox).SelectedIndex != -1)
             {
-                if ((sender as ComboBox).SelectedValue.ToString() == "--添加--")
+                if ((sender as ComboBox).SelectedValue.ToString() == "ADD")
                 {
                     (sender as ComboBox).SelectedIndex = -1;
                     managePageObj.AddComboBoxSchool();
@@ -88,7 +88,7 @@ namespace StudentManager.Views
                 cbClass.SelectedIndex = -1;
                 lbStudent.SelectedIndex = -1;
                 lbStudent.ItemsSource = new Dictionary<string, string> { };
-                managePageObj.SelectedSchool = (sender as ComboBox).SelectedValue.ToString();
+                managePageObj.SelectedSchoolID = (sender as ComboBox).SelectedValue.ToString();
                 managePageObj.LoadComboBoxMajor();
             }
         }
@@ -97,7 +97,7 @@ namespace StudentManager.Views
         {
             if ((sender as ComboBox).SelectedIndex != -1)
             {
-                if ((sender as ComboBox).SelectedValue.ToString() == "--添加--")
+                if ((sender as ComboBox).SelectedValue.ToString() == "ADD")
                 {
                     (sender as ComboBox).SelectedIndex = -1;
                     managePageObj.AddComboBoxMajor();
@@ -108,7 +108,7 @@ namespace StudentManager.Views
                 cbClass.SelectedIndex = -1;
                 lbStudent.SelectedIndex = -1;
                 lbStudent.ItemsSource = new Dictionary<string, string> { };
-                managePageObj.SelectedMajor = (sender as ComboBox).SelectedValue.ToString();
+                managePageObj.SelectedMajorID = (sender as ComboBox).SelectedValue.ToString();
                 managePageObj.LoadComboBoxClass();
             }
         }
@@ -117,7 +117,7 @@ namespace StudentManager.Views
         {
             if ((sender as ComboBox).SelectedIndex != -1)
             {
-                if ((sender as ComboBox).SelectedValue.ToString() == "--添加--")
+                if ((sender as ComboBox).SelectedValue.ToString() == "ADD")
                 {
                     (sender as ComboBox).SelectedIndex = -1;
                     managePageObj.AddComboBoxClass();
@@ -126,7 +126,7 @@ namespace StudentManager.Views
                     return;
                 }
                 lbStudent.ItemsSource = new Dictionary<string, string> { };
-                managePageObj.SelectedClass = (sender as ComboBox).SelectedValue.ToString();
+                managePageObj.SelectedClassID = (sender as ComboBox).SelectedValue.ToString();
                 managePageObj.LoadListBoxStudent();
             }
             else { lbStudent.ItemsSource = new ObservableCollection<ListBoxElement> { }; }
@@ -164,6 +164,15 @@ namespace StudentManager.Views
             managePageObj.AddListBoxStudent();
             managePageObj.RefreshSelectionBox();
             managePageObj.LoadListBoxStudent();
+        }
+
+        private void cbSchool_Selected(object sender, RoutedEventArgs e)
+        {
+            if (isFirstAccess == 0)
+            {
+                managePageObj.Init();
+                isFirstAccess = 1;
+            }
         }
     }
 }

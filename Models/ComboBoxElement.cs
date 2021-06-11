@@ -2,6 +2,7 @@
 {
     public class ComboBoxElement
     {
-        public string Text { get; set; }
+        public string ID { get; set; }
+        public string Name { get; set; }
     }
 }

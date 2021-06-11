@@ -118,8 +118,9 @@
                           Width="200"
                           IsEditable="False"
                           ItemsSource="{Binding ComboSchools}"
-                          DisplayMemberPath="Text"
-                          SelectedValuePath="Text" SelectionChanged="cbSchool_SelectionChanged">
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="ID" 
+                          SelectionChanged="cbSchool_SelectionChanged">
                 </ComboBox>
 
                 <!--专业-->
@@ -129,8 +130,8 @@
                           Width="200"
                           IsEditable="False"
                           ItemsSource="{Binding ComboMajors}"
-                          DisplayMemberPath="Text"
-                          SelectedValuePath="Text" SelectionChanged="cbMajor_SelectionChanged">
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="ID" SelectionChanged="cbMajor_SelectionChanged">
                 </ComboBox>
 
                 <!--班级-->
@@ -140,8 +141,8 @@
                           Width="200"
                           IsEditable="False"
                           ItemsSource="{Binding ComboClasses}"
-                          DisplayMemberPath="Text"
-                          SelectedValuePath="Text" SelectionChanged="cbClass_SelectionChanged">
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="ID" SelectionChanged="cbClass_SelectionChanged">
                 </ComboBox>
 
                 <!--学生-->
