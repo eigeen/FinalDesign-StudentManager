@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
+using StudentManager.Globals;
 using StudentManager.Models;
 
 namespace StudentManager.Access
@@ -19,6 +20,14 @@ namespace StudentManager.Access
         public void Connect(string dbPath)
         {
             conn = new SqliteConnection($"Data Source={dbPath}");
+            conn.Open();
+            cmd = conn.CreateCommand();
+            InitTable();
+        }    
+        
+        public void Connect()
+        {
+            conn = new SqliteConnection($"Data Source={Global.DBPath}");
             conn.Open();
             cmd = conn.CreateCommand();
             InitTable();
@@ -320,7 +329,6 @@ VALUES ('{obj.SID}', '{obj.Subject}', '{obj.Credit}',
             reader.Close();
             return ls;
         }
-
 
         public void UpdateGrades(List<GradeObject> ls, string stuID)
         {

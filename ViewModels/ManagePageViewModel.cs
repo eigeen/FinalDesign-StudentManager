@@ -114,7 +114,7 @@ namespace StudentManager.ViewModels
 
         public void Init()
         {
-            db.Connect("data.db");
+            db.Connect();
             LoadComboBoxSchool();
         }
         /// <summary>

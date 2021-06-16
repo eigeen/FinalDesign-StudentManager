@@ -27,8 +27,7 @@
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem Content="主页" Tag="HomePage" Icon="Home" />
                 <muxc:NavigationViewItem Content="学生管理" Tag="ManagePage" Icon="Page2"/>
-                <!--<muxc:NavigationViewItem Content="Menu Item3" Tag="SamplePage3" Icon="Refresh" />
-                <muxc:NavigationViewItem Content="Menu Item4" Tag="SamplePage4" Icon="Download" />-->
+                <muxc:NavigationViewItem Content="统计" Tag="ChartsPage" Icon="List" />-->
             </muxc:NavigationView.MenuItems>
 
             <muxc:NavigationView.Content>

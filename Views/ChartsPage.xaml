@@ -1,0 +1,25 @@
+﻿<ui:Page x:Class="StudentManager.Views.ChartsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:StudentManager.Views"
+      mc:Ignorable="d" 
+      xmlns:ui="http://schemas.modernwpf.com/2019"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" xmlns:viewmodels="clr-namespace:StudentManager.ViewModels"
+      d:DataContext="{d:DesignInstance Type=viewmodels:ChartsPageViewModel}"
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ChartsPage">
+    <Grid>
+        <lvc:CartesianChart Series="{Binding SeriesCol}"
+                            LegendLocation="Bottom">
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Labels="{Binding ColumnXLables}"/>
+            </lvc:CartesianChart.AxisX>
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis />
+            </lvc:CartesianChart.AxisY>
+        </lvc:CartesianChart>
+
+    </Grid>
+</ui:Page>
