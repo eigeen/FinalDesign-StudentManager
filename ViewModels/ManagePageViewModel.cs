@@ -164,8 +164,17 @@ namespace StudentManager.ViewModels
         {
             List<StudentObject> ls = GetStudentsList();
             ListBoxStudents = new ObservableCollection<ListBoxElement> { };
-            ls.ForEach(item => { ListBoxStudents.Add(new ListBoxElement { Name = item.Name, ID = item.UID }); });
+
+            ls.ForEach(item =>
+            {
+                if (item.Class == SelectedClassID)
+                {
+                    ListBoxStudents.Add(new ListBoxElement { Name = item.Name, ID = item.UID });
+                }
+            });
+
         }
+
         /// <summary>
         /// 载入学生所有成绩
         /// </summary>
